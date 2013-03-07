@@ -25,7 +25,7 @@ describe Rapidash::OAuthClient do
   end
 
   describe ".access_token_from_code" do
-    it "should call livestax for the access token" do
+    it "should call localhost for the access token" do
       auth_code = mock
       client = mock
       subject.stub(:client).and_return(client)

@@ -63,7 +63,7 @@ Currently when using the HTTP method, you will need to define your own initializ
       resource :me
     end
 
-    client = Facebook`.new({
+    client = Facebook.new({
       :site => "https://graph.facebook.com",
       :uid => "YOUR_ID",
       :secret => "YOUR_SECRET",
