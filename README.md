@@ -1,4 +1,4 @@
-# Rapidash
+# Rapidash [![Build Status](https://travis-ci.org/Gazler/rapidash.png?branch=master)](https://travis-ci.org/Gazler/rapidash)
 
 Rapidash is an opinionated core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.
 
