@@ -30,21 +30,6 @@ describe Rapidash::HTTPClient do
     end
   end
 
-  describe ".get" do
-    it "should call request" do
-      subject.should_receive(:request).with(:get, "foo", {})
-      subject.get("foo")
-    end
-  end
-
-  describe ".get" do
-    it "should call request" do
-      subject.should_receive(:request).with(:post, "foo", {})
-      subject.post("foo")
-    end
-  end
-
-
   describe ".request" do
 
     let!(:valid_response) { OpenStruct.new(:status => "200")}

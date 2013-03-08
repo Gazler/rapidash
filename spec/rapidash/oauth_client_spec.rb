@@ -47,13 +47,6 @@ describe Rapidash::OAuthClient do
     end
   end
 
-  describe ".get" do
-    it "should call request with the parameters" do
-      subject.should_receive(:request).with(:get, "me", :params => {:page => 1})
-      subject.get("me", {:page => 1})
-    end
-  end
-
   describe ".request" do
 
     let(:request) { mock }

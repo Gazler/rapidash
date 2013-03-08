@@ -15,14 +15,6 @@ module Rapidash
       @connection ||= Faraday.new(site)
     end
 
-    def get(url, options = {})
-      request(:get, url, options)
-    end
-
-    def post(url, options = {})
-      request(:post, url, options)
-    end
-
     def request(verb, url, options = {})
       url = connection.build_url(url, options[:params]).to_s
       response = connection.run_request(verb, url, options[:body], options[:header])

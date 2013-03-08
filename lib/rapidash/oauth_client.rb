@@ -17,10 +17,6 @@ module Rapidash
       self.access_token = options[:access_token] if options[:access_token]
     end
 
-    def get(url, params = {})
-      request(:get, url, :params => params)
-    end
-
     def request(verb, url, options = {})
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
       body = JSON.parse(response.body)
