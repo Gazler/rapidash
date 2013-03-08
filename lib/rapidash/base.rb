@@ -4,8 +4,17 @@ module Rapidash
     include Urlable
     attr_accessor :url, :options, :client
 
-    def initialize
-      raise ConfigurationError.new "Missing URL attribute on the resource, set it by calling `url` in your resource class"
+    def initialize(*args)
+      @client, @id, options = args
+      if @id.is_a?(Hash)
+        options = @id
+        @id = nil
+      end
+      @options ||= {}
+      options ||= {}
+      @options.merge!(options)
+      @url = self.class.to_s.split("::")[-1].downcase
+      @url += "/#{@id}" if @id
     end
 
 

@@ -4,7 +4,10 @@ class BaseTester < Rapidash::Base
   url "tester"
 end
 
-class InvalidApiTester < Rapidash::Base
+class Base < Rapidash::Base
+end
+
+class Rapidash::Resource < Rapidash::Base
 end
 
 
@@ -12,18 +15,17 @@ describe Rapidash::Base do
 
   describe ".initialize" do
 
-    it "should raise an error" do
-      expect {
-        InvalidApiTester.new
-      }.to raise_error(Rapidash::ConfigurationError)
+    it "should assume a default based on the class name" do
+      Base.new.instance_variable_get(:@url).should eql("base")
     end
 
-    it "should not raise an error if url has been called" do
-      expect {
-        BaseTester.new.should be_valid
-      }.to_not raise_error(Rapidash::ConfigurationError)
+    it "should ignore any modules when infering the URL" do
+      Rapidash::Resource.new.instance_variable_get(:@url).should eql("resource")
     end
 
+    it "should override the URL if set" do
+        BaseTester.new.instance_variable_get(:@url).should eql("tester")
+    end
   end
 
   let(:client) { mock }

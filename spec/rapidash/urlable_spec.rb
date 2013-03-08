@@ -1,13 +1,10 @@
 require 'spec_helper'
 
-class ApiTester
-  attr_accessor :url, :options, :client
-  include Rapidash::Urlable
+class ApiTester < Rapidash::Base
   url :foo
 end
 
-class ApiTesterNoUrl
-  include Rapidash::Urlable
+class ApiTesterNoUrl < Rapidash::Base
 end
 
 describe Rapidash::Urlable do
@@ -22,7 +19,7 @@ describe Rapidash::Urlable do
 
   describe "#url" do
     it "should override the initialize to set a url" do
-      ApiTesterNoUrl.new.instance_variable_get(:@url).should eql(nil)
+      ApiTesterNoUrl.new.instance_variable_get(:@url).should eql("apitesternourl")
       ApiTester.new.instance_variable_get(:@url).should eql("foo")
     end
 

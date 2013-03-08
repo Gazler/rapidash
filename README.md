@@ -23,7 +23,12 @@ Or install it yourself as:
 Resources can be defined as follows:
 
     class Users < Rapidash::Base
-      url "users"
+    end
+
+The URL of the resource will be inferred from the class name.  In this case Users.  If you want to override that, you can with the url method.
+
+    class Users < Rapidash::Base
+      url :members  # or url "members" is also supported
     end
 
 ### Client
@@ -55,7 +60,6 @@ Currently when using the HTTP method, you will need to define your own initializ
     require 'rapidash'
 
     class Me < Rapidash::Base
-      url "me"
     end
 
     class Facebook < Rapidash::Client
@@ -76,8 +80,6 @@ Currently when using the HTTP method, you will need to define your own initializ
     require 'rapidash'
 
     class Users < Rapidash::Base
-      url :users
-
       def repos!
         self.url += "/repos"
         call!

@@ -9,16 +9,9 @@ module Rapidash
       def url(url)
         self.class_eval do
           define_method(:initialize) do |*args|
-            @client, id, options = args
-            if id.is_a?(Hash)
-              options = id
-              id = nil
-            end
-            @options ||= {}
-            options ||= {}
-            @options.merge!(options)
+            super(*args)
             @url = url.to_s
-            @url += "/#{id}" if id
+            @url += "/#{@id}" if @id
           end
         end
       end
