@@ -31,6 +31,15 @@ The URL of the resource will be inferred from the class name.  In this case User
       url :members  # or url "members" is also supported
     end
 
+Resources can exist inside other resources.  For example, on Github, a user has repositories.  The following could be how you build the resources:
+
+    class Repos < Rapidash::Base
+    end
+
+    class Users < Rapidash::Base
+      resource :repos
+    end
+
 ### Client
 
 The main thing a client must do is define a method, `oauth` and `http` are currently supported.  You can also define resources which links a resource as defined above to the client.
@@ -79,11 +88,10 @@ Currently when using the HTTP method, you will need to define your own initializ
 
     require 'rapidash'
 
+    class Repos < Rapidash::Base
+
     class Users < Rapidash::Base
-      def repos!
-        self.url += "/repos"
-        call!
-      end
+      resource :repos
     end
 
     class Github < Rapidash::Client
@@ -92,7 +100,7 @@ Currently when using the HTTP method, you will need to define your own initializ
 
       def initialize
         @site = "https://api.github.com/"
-      nd
+      end
     end
 
     client = Github.new
