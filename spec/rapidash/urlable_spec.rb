@@ -4,6 +4,15 @@ class ApiTester < Rapidash::Base
   url :foo
 end
 
+class BaseUrlTester < Rapidash::Base
+  url :foo
+  
+  private
+  def base_url
+    "BASE_URL/"
+  end
+end
+
 class ApiTesterNoUrl < Rapidash::Base
 end
 
@@ -33,6 +42,11 @@ describe Rapidash::Urlable do
       api = ApiTester.new(client, 1, :option1 => "foo")
       api.instance_variable_get(:@options).should eql({:option1 => "foo"})
       api.instance_variable_get(:@url).should eql("foo/1")
+    end
+
+    it "should call base_url on when constructing the url" do
+      api = BaseUrlTester.new(client, 1)
+      api.instance_variable_get(:@url).should eql("BASE_URL/foo/1")
     end
   end
 

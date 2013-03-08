@@ -10,7 +10,7 @@ module Rapidash
         self.class_eval do
           define_method(:initialize) do |*args|
             super(*args)
-            @url = url.to_s
+            @url = "#{base_url}#{url.to_s}"
             @url += "/#{@id}" if @id
           end
         end

@@ -48,4 +48,15 @@ describe Rapidash::Base do
     end
   end
 
+  describe ".base_url" do
+    it "should return an empty string if no previous url is set" do
+      subject.send(:base_url).should eql("")
+    end
+
+    it "should return the previous url if set" do
+      subject.options = {:previous_url => "users/Gazler"}
+      subject.send(:base_url).should eql("users/Gazler/")
+    end
+  end
+
 end

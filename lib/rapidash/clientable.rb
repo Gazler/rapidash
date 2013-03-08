@@ -8,28 +8,12 @@ module Rapidash
     module ClassMethods
 
       def method(method)
-        if method == :http
-          include HTTPClient
-        elsif method == :oauth
-          include OAuthClient
+        case method
+        when :http then include HTTPClient
+        when :oauth then include OAuthClient
+        when :test then include TestClient
         else
           raise ConfigurationError.new "Invalid API Authentication Method"
-        end
-      end
-
-      def resource(name)
-        mod = self.to_s.split("::")[0...-1]
-        if mod.empty?
-          mod = Kernel
-        else
-          mod = Kernel.const_get(mod.join("::"))
-        end
-        klass = mod.const_get(name.to_s.capitalize)
-        define_method(name) do |*args|
-          klass.new(self, *args)
-        end
-        define_method("#{name}!".to_sym) do |*args|
-          klass.new(self, *args).call!
         end
       end
     end
