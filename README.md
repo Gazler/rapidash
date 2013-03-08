@@ -92,7 +92,7 @@ Currently when using the HTTP method, you will need to define your own initializ
 
       def initialize
         @site = "https://api.github.com/"
-      end
+      nd
     end
 
     client = Github.new
