@@ -24,7 +24,7 @@ module Rapidash
         else
           mod = Kernel.const_get(mod.join("::"))
         end
-        klass = mod.const_get(name.capitalize)
+        klass = mod.const_get(name.to_s.capitalize)
         define_method(name) do |*args|
           klass.new(self, *args)
         end

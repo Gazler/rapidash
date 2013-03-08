@@ -16,7 +16,7 @@ describe Rapidash::Urlable do
 
   describe "#included" do
     it "should add the url method" do
-      ApiTester.methods.should include(:url)
+      ApiTester.methods.map { |m| m.to_sym}.should include(:url)
     end
   end
 

@@ -7,12 +7,12 @@ end
 describe Rapidash::OAuthClient do
 
   let(:options) do
-    Hash({
+    {
       :uid => "foo",
       :secret => "bar",
       :access_token => "baz",
       :site => "http://example.com"
-    })
+    }
  end 
 
  let(:subject) { OAuthTester.new(options) }

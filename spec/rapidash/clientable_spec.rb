@@ -36,21 +36,21 @@ describe Rapidash::Clientable do
 
   describe "#included" do
     it "should include the resource method" do
-      Rapidash::ClientTester.methods.should include(:resource)
+      Rapidash::ClientTester.methods.map { |m| m.to_sym }.should include(:resource)
     end
 
     it "should include the method method" do
-      Rapidash::ClientTester.methods.should include(:method)
+      Rapidash::ClientTester.methods.map { |m| m.to_sym }.should include(:method)
     end
   end
 
   describe "#resource" do
     it "should add a method with the name of the argument" do
-      Rapidash::ClientTester.new.methods.should include(:users)
+      Rapidash::ClientTester.new.methods.map { |m| m.to_sym }.should include(:users)
     end
 
     it "should add a bang method with the name of the argument" do
-      Rapidash::ClientTester.new.methods.should include(:users!)
+      Rapidash::ClientTester.new.methods.map { |m| m.to_sym }.should include(:users!)
     end
   end
 
