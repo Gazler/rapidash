@@ -73,39 +73,29 @@ Currently when using the HTTP method, you will need to define your own initializ
 
 ### Github
 
-  require 'rapidash'
+    require 'rapidash'
 
-  class Users < Rapidash::Base
-    url :users
+    class Users < Rapidash::Base
+      url :users
 
-    def user(name)
-      self.url += "/#{name}"
-      self
+      def repos!
+        self.url += "/repos"
+        call!
+      end
     end
 
-    def repos!
-      self.url += "/repos"
-      call!
+    class Github < Rapidash::Client
+      method :http
+      resource :users
+
+      def initialize
+        @site = "https://api.github.com/"
+      end
     end
 
-    def user!(name)
-      user(name)
-      call!
-    end
-  end
-
-  class Github < Rapidash::Client
-    method :http
-    resource :users
-
-    def initialize
-      @site = "https://api.github.com/"
-    end
-  end
-
-  client = Github.new
-  p client.users.user!("Gazler").name           #Gary Rennie
-  p client.users.user("Gazler").repos![0].name  #Githug
+    client = Github.new
+    p client.users!("Gazler").name           #Gary Rennie
+    p client.users("Gazler").repos![0].name  #Githug
 
 ## Contributing
 
