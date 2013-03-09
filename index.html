@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Rapidash by Gazler</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/Gazler/rapidash">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/Gazler/rapidash/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/Gazler/rapidash/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Rapidash</h1>
+          <p>Evolve your API</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/Gazler">Gazler</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>Rapidash</h1>
+
+<p>Rapidash is an opinionated core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.</p>
+
+<h2>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'rapidash'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install rapidash
+</code></pre>
+
+<h2>Usage</h2>
+
+<h3>Resources</h3>
+
+<p>Resources can be defined as follows:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Users</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>The URL of the resource will be inferred from the class name.  In this case Users.  If you want to override that, you can with the url method.</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Users</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">url</span> <span class="ss">:members</span>  <span class="c1"># or url "members" is also supported</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Resources can exist inside other resources.  For example, on Github, a user has repositories.  The following could be how you build the resources:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Repos</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Users</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">resource</span> <span class="ss">:repos</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>Client</h3>
+
+<p>The main thing a client must do is define a method, <code>oauth</code> and <code>http</code> are currently supported.  You can also define resources which links a resource as defined above to the client.</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Client</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Client</span>
+  <span class="nb">method</span> <span class="ss">:oauth</span>
+  <span class="n">resource</span> <span class="ss">:users</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>OAuth provides an initialize method which you can see in the Facebook client example.</p>
+
+<p>Currently when using the HTTP method, you will need to define your own initialize method to set the site in use.</p>
+
+<h3>Making calls</h3>
+
+<div class="highlight"><pre><span class="n">client</span> <span class="o">=</span> <span class="no">Client</span><span class="o">.</span><span class="n">new</span>
+<span class="n">client</span><span class="o">.</span><span class="n">site</span> <span class="o">=</span> <span class="s2">"http://example.com/"</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users</span> <span class="c1">#Returns an instance of Users</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span> <span class="c1">#Will make a call to "http://example.com/users</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#Will make a call to http://example.com/users/1</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="n">params</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:page</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}})</span> <span class="c1"># Will make a call to http://example.com/users?page=1</span>
+</pre></div>
+
+<h2>Example Clients</h2>
+
+<h3>Facebook</h3>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'rapidash'</span>
+
+<span class="k">class</span> <span class="nc">Me</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Facebook</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Client</span>
+  <span class="nb">method</span> <span class="ss">:oauth</span>
+  <span class="n">resource</span> <span class="ss">:me</span>
+<span class="k">end</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Facebook</span><span class="o">.</span><span class="n">new</span><span class="p">({</span>
+  <span class="ss">:site</span> <span class="o">=&gt;</span> <span class="s2">"https://graph.facebook.com"</span><span class="p">,</span>
+  <span class="ss">:uid</span> <span class="o">=&gt;</span> <span class="s2">"YOUR_ID"</span><span class="p">,</span>
+  <span class="ss">:secret</span> <span class="o">=&gt;</span> <span class="s2">"YOUR_SECRET"</span><span class="p">,</span>
+  <span class="ss">:access_token</span> <span class="o">=&gt;</span> <span class="s2">"YOUR_TOKEN"</span>
+<span class="p">})</span>
+<span class="nb">p</span> <span class="n">client</span><span class="o">.</span><span class="n">me!</span><span class="o">.</span><span class="n">first_name</span> <span class="c1">#Gary</span>
+</pre></div>
+
+<h3>Github</h3>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'rapidash'</span>
+
+<span class="k">class</span> <span class="nc">Repos</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Users</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">resource</span> <span class="ss">:repos</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Github</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Client</span>
+  <span class="nb">method</span> <span class="ss">:http</span>
+  <span class="n">resource</span> <span class="ss">:users</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="vi">@site</span> <span class="o">=</span> <span class="s2">"https://api.github.com/"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Github</span><span class="o">.</span><span class="n">new</span>
+<span class="nb">p</span> <span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="s2">"Gazler"</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>           <span class="c1">#Gary Rennie</span>
+<span class="nb">p</span> <span class="n">client</span><span class="o">.</span><span class="n">users</span><span class="p">(</span><span class="s2">"Gazler"</span><span class="p">)</span><span class="o">.</span><span class="n">repos!</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">name</span>  <span class="c1">#Githug</span>
+</pre></div>
+
+<h2>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39158998-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
