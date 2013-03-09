@@ -30,7 +30,46 @@ describe Rapidash::Base do
 
   let(:client) { mock }
   let(:headers) { {"content-type" => "application/json"} }
-  let (:subject) { BaseTester.new(client) }
+  let(:subject) { BaseTester.new(client) }
+
+  let(:post) {
+    {
+      :post => {
+        :title => "A test post"
+      }
+    }
+  }
+
+  describe ".create!" do
+    it "should set the method to post and set the body" do
+      subject.should_receive(:call!)
+      subject.create!(post)
+      subject.instance_variable_get(:@options).should eql({
+        :method => :post,
+        :body => post.to_json
+      })
+    end
+  end
+
+  describe ".update!" do
+    it "should set the method to put and set the body" do
+      subject.should_receive(:call!)
+      subject.update!(post)
+      subject.instance_variable_get(:@options).should eql({
+        :method => :put,
+        :body => post.to_json
+      })
+    end
+  end
+
+  describe ".delete!" do
+    it "should set the method to delete" do
+      subject.should_receive(:call!)
+      subject.delete!
+      subject.instance_variable_get(:@options).should eql({:method => :delete})
+    end
+    
+  end
 
   describe ".call!" do
     it "should call get on the client" do

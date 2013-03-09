@@ -7,6 +7,7 @@ module Rapidash
 
     class << self
       def new(response)
+        return nil unless response.body
         type = response.headers["content-type"]
         if type.include?("application/json")
           body = JSON.parse(response.body)

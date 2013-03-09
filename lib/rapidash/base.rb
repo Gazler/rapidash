@@ -19,6 +19,23 @@ module Rapidash
       @url += "/#{@id}" if @id
     end
 
+    def create!(params)
+      self.options[:method] = :post
+      self.options[:body] = params.to_json
+      call!
+    end
+
+    def update!(params)
+      self.options[:method] = :put
+      self.options[:body] = params.to_json
+      call!
+    end
+
+    def delete!
+      self.options[:method] = :delete
+      call!
+    end
+
 
     def call!
       self.options ||= {}

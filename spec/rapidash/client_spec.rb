@@ -28,4 +28,21 @@ describe Rapidash::Client do
     end
   end
 
+  describe ".put" do
+    it "should call request" do
+      subject.should_receive(:request).with(:put, "foo", {})
+      subject.put("foo")
+    end
+  end
+
+
+  describe ".delete" do
+    it "should call request" do
+      subject.should_receive(:request).with(:delete, "foo", {})
+      subject.delete("foo")
+    end
+  end
+
+
+
 end

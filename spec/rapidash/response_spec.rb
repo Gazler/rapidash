@@ -27,7 +27,14 @@ def invalid_response
   OpenStruct.new({
     :headers => {
       "content-type" => "application/xml"
-    }
+    },
+    :body => "<xml>something</xml>"
+  })
+end
+
+def nil_response
+  OpenStruct.new({
+    :body => nil
   })
 end
 
@@ -43,6 +50,11 @@ describe Rapidash::Response do
       response = Rapidash::Response.new(valid_response_array)
       response[0].foo.should eql("bar")
       response[1].baz.should eql("bra")
+    end
+
+    it "should return nil if the response has no body" do
+      response = Rapidash::Response.new(nil_response)
+      response.should eql(nil)
     end
 
 
