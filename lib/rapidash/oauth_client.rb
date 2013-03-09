@@ -4,7 +4,7 @@ require 'hashie'
 module Rapidash
   module OAuthClient
 
-    attr_accessor :secret, :uid, :access_token, :site
+    attr_accessor :secret, :uid, :access_token, :site, :extension
 
     def initialize(options)
       [:uid, :secret, :site].each do |key|
@@ -18,6 +18,7 @@ module Rapidash
     end
 
     def request(verb, url, options = {})
+      url = "#{url}.#{extension}" if extension
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
       body = JSON.parse(response.body)
       if body.kind_of?(Hash)

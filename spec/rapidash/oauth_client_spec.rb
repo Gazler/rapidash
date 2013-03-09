@@ -57,9 +57,16 @@ describe Rapidash::OAuthClient do
       let(:response) { OpenStruct.new(:body => body) }
 
       before(:each) do
+        subject.extension = :json
         subject.stub(:oauth_access_token).and_return(request)
         request.stub(:get).and_return(response)
       end
+
+      it "should add an extension to the url if one is set" do
+        request.should_receive(:get).with("http://example.com/me.json", anything)
+        subject.request(:get, "me")
+      end
+
       it "should return a Hashie::Mash" do
         subject.request(:get, "me").class.should eql(Hashie::Mash)
       end

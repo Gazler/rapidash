@@ -40,6 +40,12 @@ describe Rapidash::HTTPClient do
       Rapidash::Response.should_receive(:new).and_return("response")
     end
 
+    it "should add an extension if one is set" do
+      subject.extension = :json
+      subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo.json", nil, nil).and_return(valid_response)
+      subject.request(:get, "foo")
+    end
+
     it "should return a response object" do
       subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(valid_response)
       response = subject.request(:get, "foo")

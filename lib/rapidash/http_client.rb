@@ -3,7 +3,7 @@ require 'faraday'
 module Rapidash
   module HTTPClient
 
-    attr_accessor :site
+    attr_accessor :site, :extension
     attr_writer :connection
 
     def site=(value)
@@ -16,6 +16,7 @@ module Rapidash
     end
 
     def request(verb, url, options = {})
+      url = "#{url}.#{extension}" if extension
       url = connection.build_url(url, options[:params]).to_s
       response = connection.run_request(verb, url, options[:body], options[:header])
 
