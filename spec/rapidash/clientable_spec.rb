@@ -10,6 +10,14 @@ class HTTPClientTester
   method :http
 end
 
+class HTTPClientPatchTester < HTTPClientTester
+  use_patch
+end
+
+class HTTPClientExtensionTester < HTTPClientTester
+  extension :json
+end
+
 class TestClientTester
   include Rapidash::Clientable
   method :test
@@ -52,6 +60,18 @@ describe Rapidash::Clientable do
       }.to raise_error(Rapidash::ConfigurationError)
     end
     
+  end
+
+  describe "#use_patch" do
+    it "should set the patch variable to true" do
+      HTTPClientPatchTester.new.class.instance_variable_get(:@patch).should eql(true)
+    end
+  end
+
+  describe "#extension" do
+    it "should set the url_extension variable" do
+      HTTPClientExtensionTester.new.class.instance_variable_get(:@url_extension).should eql(:json)
+    end
   end
 
 end

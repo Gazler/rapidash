@@ -26,5 +26,6 @@ module Rapidash
     def delete(url, options = {})
       request(:delete, url, options)
     end
+
   end
 end

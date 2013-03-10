@@ -4,6 +4,17 @@ class HTTPTester
   include Rapidash::HTTPClient
 end
 
+class HTTPSiteTester < HTTPTester
+  site "http://mysite.com/"
+end
+
+class HTTPExtensionTester < HTTPTester
+  site "http://mysite.com/"
+  def self.url_extension 
+    :json
+  end
+end
+
 describe Rapidash::HTTPClient do
 
   let!(:subject) { HTTPTester.new }
@@ -28,6 +39,18 @@ describe Rapidash::HTTPClient do
     it "should create a Faraday object" do
       subject.connection.class.should eql(Faraday::Connection)
     end
+
+    it "should use the site variable if set" do
+      Faraday.should_receive(:new).with("http://example.com/")
+      subject.site = "http://example.com/"
+      subject.connection
+    end
+
+    it "should use the class URL if one is defined" do
+      subject = HTTPSiteTester.new
+      Faraday.should_receive(:new).with("http://mysite.com/")
+      subject.connection
+    end
   end
 
   describe ".request" do
@@ -45,6 +68,13 @@ describe Rapidash::HTTPClient do
       subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo.json", nil, nil).and_return(valid_response)
       subject.request(:get, "foo")
     end
+
+    it "should use the class extension if one is set" do
+      subject = HTTPExtensionTester.new
+      subject.connection.should_receive(:run_request).with(:get, "http://mysite.com/foo.json", nil, nil).and_return(valid_response)
+      subject.request(:get, "foo")
+    end
+
 
     it "should return a response object" do
       subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(valid_response)

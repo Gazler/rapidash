@@ -76,6 +76,7 @@ class Client < Rapidash::Client
   method :oauth
   resource :users
   use_patch # This will use PATCH when updating instead of POST
+  extension :json #Append the extension fo the urls
 end
 ```
 
@@ -91,12 +92,12 @@ Currently when using the HTTP method, you will need to define your own initializ
 client = Client.new
 client.site = "http://example.com/"
 client.users                                            #Returns an instance of Users
-client.users!                                           #Will make a call to "http://example.com/users
-client.users!(1)                                        #Will make a call to http://example.com/users/1
-client.users!(params => {:page => 1}})                  #Will make a call to http://example.com/users?page=1
-client.users.create!({:user => {:name => "Gazler"}})    #POST requst to /users
-client.users(1).update!({:user => {:name => "Gazler"}}) #PUT or PATCH requst to /users
-client.users(1).delete!                                 #DELETE requst to /users
+client.users!                                           #Will make a call to "http://example.com/users.json
+client.users!(1)                                        #Will make a call to http://example.com/users/1.json
+client.users!(params => {:page => 1}})                  #Will make a call to http://example.com/users.json?page=1
+client.users.create!({:user => {:name => "Gazler"}})    #POST requst to /users.json
+client.users(1).update!({:user => {:name => "Gazler"}}) #PUT or PATCH requst to /users.json
+client.users(1).delete!                                 #DELETE requst to /users.json
 ```
 
 ## Example Clients
@@ -137,10 +138,7 @@ end
 class Github < Rapidash::Client
   method :http
   resource :users
-
-  def initialize
-    @site = "https://api.github.com/"
-  end
+  site "https://api.github.com/"
 end
 
 client = Github.new

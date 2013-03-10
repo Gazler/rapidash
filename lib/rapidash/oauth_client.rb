@@ -18,7 +18,11 @@ module Rapidash
     end
 
     def request(verb, url, options = {})
-      url = "#{url}.#{extension}" if extension
+      if extension
+        url = "#{url}.#{(extension)}"
+      elsif self.class.respond_to?(:url_extension) && self.class.url_extension
+        url = "#{url}.#{(self.class.url_extension)}"
+      end
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
       body = JSON.parse(response.body)
       if body.kind_of?(Hash)

@@ -4,6 +4,12 @@ class OAuthTester
   include Rapidash::OAuthClient
 end
 
+class OAuthExtensionTester < OAuthTester
+  def self.url_extension 
+    :json
+  end
+end
+
 describe Rapidash::OAuthClient do
 
   let(:options) do
@@ -66,6 +72,15 @@ describe Rapidash::OAuthClient do
         request.should_receive(:get).with("http://example.com/me.json", anything)
         subject.request(:get, "me")
       end
+
+      it "should use the class extension if one is set" do
+        subject = OAuthExtensionTester.new(options)
+        subject.stub(:oauth_access_token).and_return(request)
+        request.stub(:get).and_return(response)
+        request.should_receive(:get).with("http://example.com/me.json", anything)
+        subject.request(:get, "me")
+      end
+
 
       it "should return a Hashie::Mash" do
         subject.request(:get, "me").class.should eql(Hashie::Mash)

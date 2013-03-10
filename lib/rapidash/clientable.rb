@@ -7,7 +7,7 @@ module Rapidash
 
     module ClassMethods
 
-      attr_accessor :patch
+      attr_accessor :patch, :url_extension
 
       def method(method)
         case method
@@ -21,6 +21,10 @@ module Rapidash
 
       def use_patch
         @patch = true
+      end
+
+      def extension(extension)
+        @url_extension = extension
       end
     end
   end
