@@ -22,32 +22,43 @@ Or install it yourself as:
 
 Resources can be defined as follows:
 
-    class Users < Rapidash::Base
-    end
+```ruby
+class Users < Rapidash::Base
+end
+```
 
 The URL of the resource will be inferred from the class name.  In this case Users.  If you want to override that, you can with the url method.
 
-    class Users < Rapidash::Base
-      url :members  # or url "members" is also supported
-    end
+```ruby
+class Users < Rapidash::Base
+  url :members  # or url "members" is also supported
+end
+```
 
 Resources can exist inside other resources.  For example, on Github, a user has repositories.  The following could be how you build the resources:
 
-    class Repos < Rapidash::Base
-    end
+```ruby
+class Repos < Rapidash::Base
+end
 
-    class Users < Rapidash::Base
-      resource :repos
-    end
+class Users < Rapidash::Base
+  resource :repos
+end
+```
 
 ### Client
 
 The main thing a client must do is define a method, `oauth` and `http` are currently supported.  You can also define resources which links a resource as defined above to the client.
 
-    class Client < Rapidash::Client
-      method :oauth
-      resource :users
-    end
+```ruby
+class Client < Rapidash::Client
+  method :oauth
+  resource :users
+  use_patch # This will use PATCH when updating instead of POST
+end
+```
+
+
 
 OAuth provides an initialize method which you can see in the Facebook client example.
 
@@ -55,57 +66,66 @@ Currently when using the HTTP method, you will need to define your own initializ
 
 ### Making calls
 
-    client = Client.new
-    client.site = "http://example.com/"
-    client.users #Returns an instance of Users
-    client.users! #Will make a call to "http://example.com/users
-    client.users!(1) #Will make a call to http://example.com/users/1
-    client.users!(params => {:page => 1}}) # Will make a call to http://example.com/users?page=1
+```ruby
+client = Client.new
+client.site = "http://example.com/"
+client.users                                            #Returns an instance of Users
+client.users!                                           #Will make a call to "http://example.com/users
+client.users!(1)                                        #Will make a call to http://example.com/users/1
+client.users!(params => {:page => 1}})                  #Will make a call to http://example.com/users?page=1
+client.users.create!({:user => {:name => "Gazler"}})    #POST requst to /users
+client.users(1).update!({:user => {:name => "Gazler"}}) #PUT or PATCH requst to /users
+client.users(1).delete!                                 #DELETE requst to /users
+```
 
 ## Example Clients
 
 ### Facebook
 
-    require 'rapidash'
+```ruby
+require 'rapidash'
 
-    class Me < Rapidash::Base
-    end
+class Me < Rapidash::Base
+end
 
-    class Facebook < Rapidash::Client
-      method :oauth
-      resource :me
-    end
+class Facebook < Rapidash::Client
+  method :oauth
+  resource :me
+end
 
-    client = Facebook.new({
-      :site => "https://graph.facebook.com",
-      :uid => "YOUR_ID",
-      :secret => "YOUR_SECRET",
-      :access_token => "YOUR_TOKEN"
-    })
-    p client.me!.first_name #Gary
+client = Facebook.new({
+  :site => "https://graph.facebook.com",
+  :uid => "YOUR_ID",
+  :secret => "YOUR_SECRET",
+  :access_token => "YOUR_TOKEN"
+})
+p client.me!.first_name #Gary
+```
 
 ### Github
 
-    require 'rapidash'
+```ruby
+require 'rapidash'
 
-    class Repos < Rapidash::Base
+class Repos < Rapidash::Base
 
-    class Users < Rapidash::Base
-      resource :repos
-    end
+class Users < Rapidash::Base
+  resource :repos
+end
 
-    class Github < Rapidash::Client
-      method :http
-      resource :users
+class Github < Rapidash::Client
+  method :http
+  resource :users
 
-      def initialize
-        @site = "https://api.github.com/"
-      end
-    end
+  def initialize
+    @site = "https://api.github.com/"
+  end
+end
 
-    client = Github.new
-    p client.users!("Gazler").name           #Gary Rennie
-    p client.users("Gazler").repos![0].name  #Githug
+client = Github.new
+p client.users!("Gazler").name           #Gary Rennie
+p client.users("Gazler").repos![0].name  #Githug
+```
 
 ## Contributing
 
