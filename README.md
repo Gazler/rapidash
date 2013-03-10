@@ -46,6 +46,27 @@ class Users < Rapidash::Base
 end
 ```
 
+#### Root elements
+
+A root element can be set for create and post actions
+
+```ruby
+class Posts < Rapidash::Base
+end
+
+client.posts.create!({:post => {:name => "a post"}})
+```
+
+With a root element, the code would look like this:
+
+```ruby
+class Posts < Rapidash::Base
+  root :post
+end
+
+client.posts.create!(:name => "a post")
+```
+
 ### Client
 
 The main thing a client must do is define a method, `oauth` and `http` are currently supported.  You can also define resources which links a resource as defined above to the client.

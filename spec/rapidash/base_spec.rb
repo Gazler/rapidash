@@ -16,6 +16,10 @@ class BaseTesterClient
   end
 end
 
+class RootTester < Rapidash::Base
+  root :post
+end
+
 
 describe Rapidash::Base do
 
@@ -38,11 +42,15 @@ describe Rapidash::Base do
   let(:headers) { {"content-type" => "application/json"} }
   let(:subject) { BaseTester.new(client) }
 
+  let(:no_root) {
+    {
+      :title => "A test post"
+    }
+  }
+
   let(:post) {
     {
-      :post => {
-        :title => "A test post"
-      }
+      :post => no_root
     }
   }
 
@@ -50,6 +58,16 @@ describe Rapidash::Base do
     it "should set the method to post and set the body" do
       subject.should_receive(:call!)
       subject.create!(post)
+      subject.instance_variable_get(:@options).should eql({
+        :method => :post,
+        :body => post.to_json
+      })
+    end
+
+    it "should use the root element if one is defined" do
+      subject = RootTester.new
+      subject.should_receive(:call!)
+      subject.create!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :post,
         :body => post.to_json
@@ -71,6 +89,16 @@ describe Rapidash::Base do
       client.class.patch = true
       subject.should_receive(:call!)
       subject.update!(post)
+      subject.instance_variable_get(:@options).should eql({
+        :method => :patch,
+        :body => post.to_json
+      })
+    end
+
+    it "should use the root element if one is defined" do
+      subject = RootTester.new(client)
+      subject.should_receive(:call!)
+      subject.update!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :patch,
         :body => post.to_json

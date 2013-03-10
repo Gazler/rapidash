@@ -3,7 +3,16 @@ module Rapidash
 
     include Urlable
     include Resourceable
+
     attr_accessor :url, :options, :client
+
+    class << self
+      attr_accessor :root_element
+
+      def root(name)
+        @root_element = name.to_sym
+      end
+    end
 
     def initialize(*args)
       @client, @id, options = args
@@ -20,33 +29,41 @@ module Rapidash
     end
 
     def create!(params)
-      self.options[:method] = :post
-      self.options[:body] = params.to_json
+      options[:method] = :post
+      set_body!(params)
       call!
     end
 
     def update!(params)
-      self.options[:method] = client.class.patch ? :patch : :put
-      self.options[:body] = params.to_json
+      options[:method] = client.class.patch ? :patch : :put
+      set_body!(params)
       call!
     end
 
     def delete!
-      self.options[:method] = :delete
+      options[:method] = :delete
       call!
     end
 
 
     def call!
       self.options ||= {}
-      self.options.delete(:previous_url)
-      self.options[:header] ||= {}
-      self.options[:header]["content-type"] = "application/json"
-      method = self.options.delete(:method) || :get
-      client.send(method, url, self.options)
+      options.delete(:previous_url)
+      options[:header] ||= {}
+      options[:header]["content-type"] = "application/json"
+      method = options.delete(:method) || :get
+      client.send(method, url, options)
     end
 
     private
+
+    def set_body!(params)
+      if self.class.root_element
+        options[:body] = {self.class.root_element => params}.to_json
+      else
+        options[:body] = params.to_json
+      end
+    end
 
     def base_url
       if old_url = self.options[:previous_url]
