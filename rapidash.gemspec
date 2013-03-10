@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["gazler@gmail.com"]
   spec.description   = %q{Evolve your API}
   spec.summary       = %q{An opinionated core for creating clients for RESTful APIs quickly}
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/Gazler/rapidash"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

@@ -10,6 +10,12 @@ end
 class Rapidash::Resource < Rapidash::Base
 end
 
+class BaseTesterClient
+  class << self
+    attr_accessor :patch
+  end
+end
+
 
 describe Rapidash::Base do
 
@@ -28,7 +34,7 @@ describe Rapidash::Base do
     end
   end
 
-  let(:client) { mock }
+  let(:client) { BaseTesterClient.new }
   let(:headers) { {"content-type" => "application/json"} }
   let(:subject) { BaseTester.new(client) }
 
@@ -57,6 +63,16 @@ describe Rapidash::Base do
       subject.update!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :put,
+        :body => post.to_json
+      })
+    end
+
+    it "should use the patch verb if set on the client" do
+      client.class.patch = true
+      subject.should_receive(:call!)
+      subject.update!(post)
+      subject.instance_variable_get(:@options).should eql({
+        :method => :patch,
         :body => post.to_json
       })
     end

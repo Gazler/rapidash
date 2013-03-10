@@ -35,6 +35,12 @@ describe Rapidash::Client do
     end
   end
 
+  describe ".patch" do
+    it "should call request" do
+      subject.should_receive(:request).with(:patch, "foo", {})
+      subject.patch("foo")
+    end
+  end
 
   describe ".delete" do
     it "should call request" do

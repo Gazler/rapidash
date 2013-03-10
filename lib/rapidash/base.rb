@@ -26,7 +26,7 @@ module Rapidash
     end
 
     def update!(params)
-      self.options[:method] = :put
+      self.options[:method] = client.class.patch ? :patch : :put
       self.options[:body] = params.to_json
       call!
     end

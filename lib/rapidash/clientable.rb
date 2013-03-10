@@ -7,6 +7,8 @@ module Rapidash
 
     module ClassMethods
 
+      attr_accessor :patch
+
       def method(method)
         case method
         when :http then include HTTPClient
@@ -15,6 +17,10 @@ module Rapidash
         else
           raise ConfigurationError.new "Invalid API Authentication Method"
         end
+      end
+
+      def use_patch
+        @patch = true
       end
     end
   end

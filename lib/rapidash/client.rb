@@ -19,6 +19,10 @@ module Rapidash
       request(:put, url, options)
     end
 
+    def patch(url, options = {})
+      request(:patch, url, options)
+    end
+
     def delete(url, options = {})
       request(:delete, url, options)
     end

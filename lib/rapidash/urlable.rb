@@ -7,12 +7,10 @@ module Rapidash
 
     module ClassMethods
       def url(url)
-        self.class_eval do
-          define_method(:initialize) do |*args|
-            super(*args)
-            @url = "#{base_url}#{url.to_s}"
-            @url += "/#{@id}" if @id
-          end
+        define_method(:initialize) do |*args|
+          super(*args)
+          @url = "#{base_url}#{url.to_s}"
+          @url += "/#{@id}" if @id
         end
       end
     end
