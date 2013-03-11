@@ -23,17 +23,9 @@ module Rapidash
       elsif self.class.respond_to?(:url_extension) && self.class.url_extension
         url = "#{url}.#{(self.class.url_extension)}"
       end
+        options[:raise_errors] = self.class.respond_to?(:raise_error) && self.class.raise_error
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
-      body = JSON.parse(response.body)
-      if body.kind_of?(Hash)
-        return Hashie::Mash.new(body)
-      elsif body.kind_of?(Array)
-        output = []
-        body.each do |el|
-          output << Hashie::Mash.new(el)
-        end
-        return output
-      end
+      return Response.new(response)
     end
 
     def access_token_from_code(code, url)

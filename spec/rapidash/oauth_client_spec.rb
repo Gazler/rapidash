@@ -10,16 +10,26 @@ class OAuthExtensionTester < OAuthTester
   end
 end
 
+class OAuthErrorTester < OAuthTester
+  def self.raise_error
+    true
+  end
+end
+
 describe Rapidash::OAuthClient do
 
-  let(:options) do
+  before(:each) do
+    Rapidash::Response.stub(:new).and_return(Hashie::Mash.new)
+  end
+
+  let(:options) {
     {
       :uid => "foo",
       :secret => "bar",
       :access_token => "baz",
       :site => "http://example.com"
     }
- end 
+  }
 
  let(:subject) { OAuthTester.new(options) }
 
@@ -59,13 +69,10 @@ describe Rapidash::OAuthClient do
 
     describe "object returned from API call" do
 
-      let(:body) { {:foo => "bar"}.to_json }
-      let(:response) { OpenStruct.new(:body => body) }
-
       before(:each) do
         subject.extension = :json
         subject.stub(:oauth_access_token).and_return(request)
-        request.stub(:get).and_return(response)
+        request.stub(:get)
       end
 
       it "should add an extension to the url if one is set" do
@@ -76,7 +83,7 @@ describe Rapidash::OAuthClient do
       it "should use the class extension if one is set" do
         subject = OAuthExtensionTester.new(options)
         subject.stub(:oauth_access_token).and_return(request)
-        request.stub(:get).and_return(response)
+        request.stub(:get)
         request.should_receive(:get).with("http://example.com/me.json", anything)
         subject.request(:get, "me")
       end
@@ -86,31 +93,16 @@ describe Rapidash::OAuthClient do
         subject.request(:get, "me").class.should eql(Hashie::Mash)
       end
 
-      it "should return a traversable object" do
-        subject.request(:get, "me").foo.should eql("bar")
-      end
-
     end
 
-    describe "array returned from API call" do
-
-      let(:body) { [{:foo => "bar"}, {:baz => "bra"}].to_json }
-      let(:response) { OpenStruct.new(:body => body) }
-
-      before(:each) do
+    describe "when errors are set" do
+      it "should call oauth_access_token.send with errors set" do
+        subject = OAuthErrorTester.new(options)
         subject.stub(:oauth_access_token).and_return(request)
-        request.stub(:get).and_return(response)
+        request.should_receive(:send).with(:get, "http://example.com/error", {:raise_errors => true})
+        subject.request(:get, "error")
       end
-      it "should return an array" do
-        subject.request(:get, "me").class.should eql(Array)
-      end
-
-      it "should return a traversable object" do
-        response = subject.request(:get, "me")
-        response[0].foo.should eql("bar")
-        response[1].baz.should eql("bra")
-      end
-
+      
     end
   end
 

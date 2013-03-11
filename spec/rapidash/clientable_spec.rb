@@ -18,6 +18,11 @@ class HTTPClientExtensionTester < HTTPClientTester
   extension :json
 end
 
+class HTTPClientErrorTester < HTTPClientTester
+  raise_errors
+end
+
+
 class TestClientTester
   include Rapidash::Clientable
   method :test
@@ -71,6 +76,12 @@ describe Rapidash::Clientable do
   describe "#extension" do
     it "should set the url_extension variable" do
       HTTPClientExtensionTester.new.class.instance_variable_get(:@url_extension).should eql(:json)
+    end
+  end
+
+  describe "#raise_errors" do
+    it "should set the raise_error variable" do
+      HTTPClientErrorTester.new.class.instance_variable_get(:@raise_error).should eql(true)
     end
   end
 

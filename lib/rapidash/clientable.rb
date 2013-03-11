@@ -7,7 +7,7 @@ module Rapidash
 
     module ClassMethods
 
-      attr_accessor :patch, :url_extension
+      attr_accessor :patch, :url_extension, :raise_error
 
       def method(method)
         case method
@@ -25,6 +25,10 @@ module Rapidash
 
       def extension(extension)
         @url_extension = extension
+      end
+
+      def raise_errors
+        @raise_error = true
       end
     end
   end
