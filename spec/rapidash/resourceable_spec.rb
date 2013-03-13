@@ -28,6 +28,11 @@ class Rapidash::ClientTester
   resource :users
 end
 
+class Rapidash::MultiResourceTester
+  include Rapidash::Resourceable
+  resource :users, :repos
+end
+
 class ClientTester
   include Rapidash::Resourceable
   resource :users
@@ -49,6 +54,11 @@ describe Rapidash::Resourceable do
 
     it "should add a bang method with the name of the argument" do
       Rapidash::ClientTester.new.methods.map { |m| m.to_sym }.should include(:users!)
+    end
+
+    it "should add a method for each resource is an array is passed" do
+      methods = Rapidash::MultiResourceTester.new.methods.map { |m| m.to_sym }
+      (methods & [:users, :users!, :repos, :repos!]).length.should eql(4)
     end
   end
 

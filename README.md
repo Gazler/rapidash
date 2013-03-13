@@ -74,7 +74,7 @@ The main thing a client must do is define a method, `oauth` and `http` are curre
 ```ruby
 class Client < Rapidash::Client
   method :oauth
-  resource :users
+  resource :users, :repos #An array can be passed through
   use_patch # This will use PATCH when updating instead of POST
   extension :json #Append the extension fo the urls
 end

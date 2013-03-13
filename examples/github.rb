@@ -38,13 +38,7 @@ end
 class Client < Rapidash::Client
   method :http
   site "https://api.github.com/"
-  resource :users
-  resource :repos
-  resource :emojis
-  resource :events
-  resource :gists
-  resource :organisations
-  resource :limit
+  resource :users, :repos, :emojis, :events, :gists, :organisations, :limit
 end
 
 client = Client.new
