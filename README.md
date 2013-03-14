@@ -1,6 +1,8 @@
 # Rapidash [![Build Status](https://travis-ci.org/Gazler/rapidash.png?branch=master)](https://travis-ci.org/Gazler/rapidash)
 
-Rapidash is an opinionated core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.
+[![Rapidash](http://rapidashgem.com/rapidash.png)]
+
+Rapidash is a core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.
 
 ## Installation
 
@@ -153,3 +155,7 @@ p client.users("Gazler").repos![0].name  #Githug
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Credits
+
+Thanks to @Sid3show for the sweet logo!
