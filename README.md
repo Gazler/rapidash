@@ -20,6 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
+A screencast on Rapidash is available to watch in mp4 and ogv formats.
+
+ * [Rapidash Screencast mp4](http://screencasts.gazler.com/rapidash.mp4)
+ * [Rapidash Screencast ogv](http://screencasts.gazler.com/rapidash.ogv)
+
 ### Resources
 
 Resources can be defined as follows:
@@ -158,4 +163,4 @@ p client.users("Gazler").repos![0].name  #Githug
 
 ## Credits
 
-Thanks to @Sid3show for the sweet logo!
+Thanks to [@Sid3show](https://github.com/Sid3show) for the sweet logo!
