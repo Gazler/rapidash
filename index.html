@@ -38,16 +38,17 @@
           <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
         </div>
 
-        <h1>Rapidash</h1>
+        <h1>Rapidash <a href="https://travis-ci.org/Gazler/rapidash"><img src="https://travis-ci.org/Gazler/rapidash.png?branch=master" alt="Build Status"></a>
+</h1>
 
-<p><img src="images/rapidash.png" alt="Rapidash"></p>
+<p><img src="http://rapidashgem.com/images/rapidash.png" alt="Rapidash"></p>
 
 <pre><code>A wild API appeared
 Developer used Rapidash
 It was super effective
 </code></pre>
 
-<p>Rapidash is an opinionated core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.</p>
+<p>Rapidash is a core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.</p>
 
 <h2>Installation</h2>
 
@@ -68,7 +69,12 @@ It was super effective
 
 <h2>Usage</h2>
 
-<h3>Resources</h3>
+<p>A screencast on Rapidash is available to watch in mp4 and ogv formats.</p>
+
+<ul>
+<li><a href="http://screencasts.gazler.com/rapidash.mp4">Rapidash Screencast mp4</a></li>
+<li><a href="http://screencasts.gazler.com/rapidash.ogv">Rapidash Screencast ogv</a></li>
+</ul><h3>Resources</h3>
 
 <p>Resources can be defined as follows:</p>
 
@@ -93,13 +99,34 @@ It was super effective
 <span class="k">end</span>
 </pre></div>
 
+<h4>Root elements</h4>
+
+<p>A root element can be set for create and post actions</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Posts</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">create!</span><span class="p">({</span><span class="ss">:post</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">"a post"</span><span class="p">}})</span>
+</pre></div>
+
+<p>With a root element, the code would look like this:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Posts</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">root</span> <span class="ss">:post</span>
+<span class="k">end</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">"a post"</span><span class="p">)</span>
+</pre></div>
+
 <h3>Client</h3>
 
 <p>The main thing a client must do is define a method, <code>oauth</code> and <code>http</code> are currently supported.  You can also define resources which links a resource as defined above to the client.</p>
 
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Client</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Client</span>
   <span class="nb">method</span> <span class="ss">:oauth</span>
-  <span class="n">resource</span> <span class="ss">:users</span>
+  <span class="n">resource</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:repos</span> <span class="c1">#An array can be passed through</span>
+  <span class="n">use_patch</span> <span class="c1"># This will use PATCH when updating instead of POST</span>
+  <span class="n">extension</span> <span class="ss">:json</span> <span class="c1">#Append the extension fo the urls</span>
 <span class="k">end</span>
 </pre></div>
 
@@ -111,10 +138,13 @@ It was super effective
 
 <div class="highlight"><pre><span class="n">client</span> <span class="o">=</span> <span class="no">Client</span><span class="o">.</span><span class="n">new</span>
 <span class="n">client</span><span class="o">.</span><span class="n">site</span> <span class="o">=</span> <span class="s2">"http://example.com/"</span>
-<span class="n">client</span><span class="o">.</span><span class="n">users</span> <span class="c1">#Returns an instance of Users</span>
-<span class="n">client</span><span class="o">.</span><span class="n">users!</span> <span class="c1">#Will make a call to "http://example.com/users</span>
-<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#Will make a call to http://example.com/users/1</span>
-<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="n">params</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:page</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}})</span> <span class="c1"># Will make a call to http://example.com/users?page=1</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users</span>                                            <span class="c1">#Returns an instance of Users</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span>                                           <span class="c1">#Will make a call to "http://example.com/users.json</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                                        <span class="c1">#Will make a call to http://example.com/users/1.json</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users!</span><span class="p">(</span><span class="n">params</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:page</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}})</span>                  <span class="c1">#Will make a call to http://example.com/users.json?page=1</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">create!</span><span class="p">({</span><span class="ss">:user</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">"Gazler"</span><span class="p">}})</span>    <span class="c1">#POST requst to /users.json</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">update!</span><span class="p">({</span><span class="ss">:user</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">"Gazler"</span><span class="p">}})</span> <span class="c1">#PUT or PATCH requst to /users.json</span>
+<span class="n">client</span><span class="o">.</span><span class="n">users</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delete!</span>                                 <span class="c1">#DELETE requst to /users.json</span>
 </pre></div>
 
 <h2>Example Clients</h2>
@@ -145,7 +175,6 @@ It was super effective
 <div class="highlight"><pre><span class="nb">require</span> <span class="s1">'rapidash'</span>
 
 <span class="k">class</span> <span class="nc">Repos</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
-<span class="k">end</span>
 
 <span class="k">class</span> <span class="nc">Users</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Base</span>
   <span class="n">resource</span> <span class="ss">:repos</span>
@@ -154,10 +183,7 @@ It was super effective
 <span class="k">class</span> <span class="nc">Github</span> <span class="o">&lt;</span> <span class="ss">Rapidash</span><span class="p">:</span><span class="ss">:Client</span>
   <span class="nb">method</span> <span class="ss">:http</span>
   <span class="n">resource</span> <span class="ss">:users</span>
-
-  <span class="k">def</span> <span class="nf">initialize</span>
-    <span class="vi">@site</span> <span class="o">=</span> <span class="s2">"https://api.github.com/"</span>
-  <span class="k">end</span>
+  <span class="n">site</span> <span class="s2">"https://api.github.com/"</span>
 <span class="k">end</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="no">Github</span><span class="o">.</span><span class="n">new</span>
@@ -173,7 +199,9 @@ It was super effective
 <li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
 <li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
 <li>Create new Pull Request</li>
-</ol>
+</ol><h2>Credits</h2>
+
+<p>Thanks to <a href="https://github.com/Sid3show">@Sid3show</a> for the sweet logo!</p>
       </section>
 
     </div>
