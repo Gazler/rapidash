@@ -8,7 +8,6 @@ module Rapidash
       def new(response)
         return nil unless response.body
         type = response.headers["content-type"]
-        if type.include?("application/json")
           body = JSON.parse(response.body)
           if body.kind_of?(Hash)
             return Hashie::Mash.new(body)
@@ -19,9 +18,8 @@ module Rapidash
             end
             return output
           end
-        else
-          raise ParseError.new("Cannot parse content type: #{response.headers["content-type"]}")
-        end
+      rescue JSON::ParserError => e
+        raise ParseError.new("Failed to parse content for type: #{response.headers["content-type"]}")
       end
     end
 
