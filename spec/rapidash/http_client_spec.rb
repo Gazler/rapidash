@@ -69,6 +69,17 @@ describe Rapidash::HTTPClient do
       subject.site = "http://example.com"
     end
 
+    describe "authorization" do
+      let!(:options) { {:login => "login", :password => "password"} }
+      let!(:subject) { HTTPTester.new options }
+
+      it "should authorize with login and password" do
+        subject.connection.should_receive(:basic_auth).with(options[:login], options[:password])
+        subject.connection.stub_chain('app.call').and_return(valid_response)
+        subject.request(:get, "foo")
+      end
+    end
+
     describe "valid response" do
 
       before(:each) do
