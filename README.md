@@ -153,6 +153,22 @@ p client.users!("Gazler").name           #Gary Rennie
 p client.users("Gazler").repos![0].name  #Githug
 ```
 
+### HTTP Authentication
+
+```ruby
+require 'rapidash'
+
+class Client < Rapidash::Client
+  method :http
+  site "your site"
+end
+
+client = Client.new({
+  :login => "your login",
+  :password => "your password",
+})
+```
+
 ## Contributing
 
 1. Fork it
