@@ -7,10 +7,13 @@ module Rapidash
       base.extend(ClassMethods)
     end
 
-    attr_accessor :extension, :site
+    attr_accessor :extension, :site, :login, :password
     attr_writer :connection
 
-    def initialize
+    def initialize(options = {})
+      [:login, :password].each do |key|
+        self.send("#{key.to_s}=".to_sym, options[key])
+      end
     end
 
     def site=(site)
@@ -29,7 +32,9 @@ module Rapidash
         url = "#{url}.#{(self.class.url_extension)}"
       end
       url = connection.build_url(url, options[:params]).to_s
-      response = connection.run_request(verb, url, options[:body], options[:header])
+      response = connection.run_request verb, url, options[:body], options[:header] do |request|
+        request.headers.update(Authorization: connection.basic_auth(login, password)) if login && password
+      end
 
       # "foo"[0] does not work in 1.8.7, "foo"[0,1] is required
       case response.status.to_s[0,1]
