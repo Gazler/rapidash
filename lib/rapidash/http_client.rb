@@ -33,7 +33,7 @@ module Rapidash
       end
       url = connection.build_url(url, options[:params]).to_s
       response = connection.run_request verb, url, options[:body], options[:header] do |request|
-        request.headers.update(Authorization: connection.basic_auth(login, password)) if login && password
+        request.headers.update(:Authorization => connection.basic_auth(login, password)) if login && password
       end
 
       # "foo"[0] does not work in 1.8.7, "foo"[0,1] is required

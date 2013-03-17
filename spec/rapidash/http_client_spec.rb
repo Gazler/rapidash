@@ -70,7 +70,7 @@ describe Rapidash::HTTPClient do
     end
 
     describe "authorization" do
-      let!(:options) { Hash[:login => "login", :password => "password"] }
+      let!(:options) { { :login => "login", :password => "password" } }
       let!(:subject) { HTTPTester.new options }
 
       it "should authorize with login and password" do
