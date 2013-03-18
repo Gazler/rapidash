@@ -1,12 +1,10 @@
 module Rapidash
   module Resourceable
-
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
-
       def resource(*names)
         mod = self.to_s.split("::")[0...-1]
         if mod.empty?
@@ -14,8 +12,6 @@ module Rapidash
         else
           mod = Kernel.const_get(mod.join("::"))
         end
-
-
 
         names.each do |name|
           klass = mod.const_get(name.to_s.capitalize)
@@ -39,8 +35,6 @@ module Rapidash
           end
         end
       end
-
     end
-
   end
 end

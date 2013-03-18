@@ -1,6 +1,5 @@
 module Rapidash
   module TestClient
-
     attr_accessor :responses
 
     def initialize(options = {})

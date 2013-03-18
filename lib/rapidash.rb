@@ -4,7 +4,6 @@ require "rapidash/errors"
 
 require "rapidash/response"
 
-require "rapidash/clientable"
 require "rapidash/resourceable"
 require "rapidash/client"
 

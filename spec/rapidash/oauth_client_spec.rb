@@ -1,11 +1,15 @@
 require 'spec_helper'
 
-class OAuthTester
+class OAuthTester < Rapidash::Client
   include Rapidash::OAuthClient
 end
 
+class OAuthSiteTester < OAuthTester
+  site "http://mysite.com/"
+end
+
 class OAuthExtensionTester < OAuthTester
-  def self.url_extension 
+  def self.extension
     :json
   end
 end
@@ -17,7 +21,6 @@ class OAuthErrorTester < OAuthTester
 end
 
 describe Rapidash::OAuthClient do
-
   before(:each) do
     Rapidash::Response.stub(:new).and_return(Hashie::Mash.new)
   end
@@ -37,6 +40,12 @@ describe Rapidash::OAuthClient do
   describe ".site" do
     it "should be example.com" do
       subject.site.should eql("http://example.com")
+    end
+
+    it "should use the class URL if one is defined" do
+      subject = OAuthSiteTester.new(:uid => options[:uid], :secret => options[:secret])
+      ::OAuth2::Client.should_receive(:new).with(options[:uid], options[:secret], :site => "http://mysite.com/")
+      subject.send(:client)
     end
   end
 
@@ -105,7 +114,5 @@ describe Rapidash::OAuthClient do
       
     end
   end
-
-
 end
 
