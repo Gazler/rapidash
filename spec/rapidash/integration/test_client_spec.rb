@@ -2,10 +2,10 @@ require 'spec_helper'
 
 module Integration
 
-  class Repos < Rapidash::Base
+  class Repo < Rapidash::Base
   end
 
-  class Users < Rapidash::Base
+  class User < Rapidash::Base
     url "members"
     resource :repos
   end

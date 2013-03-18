@@ -1,6 +1,6 @@
 require "spec_helper"
 
-class Rapidash::Repos
+class Rapidash::Repo
   attr_accessor :client, :args
   def initialize(client, *args)
     @client = client
@@ -8,7 +8,7 @@ class Rapidash::Repos
   end
 end
 
-class Rapidash::Users
+class Rapidash::User
   include Rapidash::Resourceable
   attr_accessor :client, :url
   resource :repos
@@ -18,12 +18,17 @@ class Rapidash::Users
   end
 end
 
-class Users 
+class User
   def initialize(*args)
   end
 end
 
-class AdminUsers 
+class AdminUser
+  def initialize(*args)
+  end
+end
+
+class CoreMembers
   def initialize(*args)
   end
 end
@@ -64,7 +69,13 @@ describe Rapidash::Resourceable do
           resource :admin_users
         end
       }.to_not raise_error(NameError)
+    end
 
+    it "should load the plural class with a warning if the singular is not defined" do
+      Kernel.should_receive(:warn).with("Using CoreMembers instead of CoreMember")
+      class ClientTester
+        resource :core_members
+      end
     end
 
     it "should add a bang method with the name of the argument" do
@@ -79,18 +90,18 @@ describe Rapidash::Resourceable do
 
   describe ".users" do
     it "should return an instance of the resource" do
-      Rapidash::ClientTester.new.users.class.should eql(Rapidash::Users)
+      Rapidash::ClientTester.new.users.class.should eql(Rapidash::User)
     end
 
     it "should not use a namespace if not in a module" do
-      ClientTester.new.users.class.should eql(Users)
+      ClientTester.new.users.class.should eql(User)
     end
   end
 
   describe ".tickets!" do
     it "should return an instance of the resource and call it" do
       users = mock
-      Rapidash::Users.should_receive(:new).and_return(users)
+      Rapidash::User.should_receive(:new).and_return(users)
       users.should_receive(:call!)
       Rapidash::ClientTester.new.users!
     end
@@ -99,20 +110,20 @@ describe Rapidash::Resourceable do
   describe "chaining resources" do
     it "should allow resources to be nested" do
       client = mock
-      users = Rapidash::Users.new(client)
+      users = Rapidash::User.new(client)
       users.methods.map { |m| m.to_sym }.should include(:repos)
       users.methods.map { |m| m.to_sym }.should include(:repos!)
     end
 
     it "should maintain the client across resources " do
       client = mock
-      users = Rapidash::Users.new(client)
+      users = Rapidash::User.new(client)
       users.repos.instance_variable_get(:@client).should eql(client)
     end
 
     it "should maintain the URL when chaining" do
       client = mock
-      users = Rapidash::Users.new(client)
+      users = Rapidash::User.new(client)
       users.repos.instance_variable_get(:@args)[0].keys.should include(:previous_url)
     end
   end
