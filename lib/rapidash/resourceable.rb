@@ -18,7 +18,7 @@ module Rapidash
 
 
         names.each do |name|
-          klass = mod.const_get(name.to_s.capitalize)
+          klass = mod.const_get(name.to_s.camelcase)
 
           define_method(name) do |*args|
             if self.respond_to?(:url)

@@ -23,6 +23,12 @@ class Users
   end
 end
 
+class AdminUsers 
+  def initialize(*args)
+  end
+end
+
+
 class Rapidash::ClientTester
   include Rapidash::Resourceable
   resource :users
@@ -50,6 +56,15 @@ describe Rapidash::Resourceable do
   describe "#resource" do
     it "should add a method with the name of the argument" do
       Rapidash::ClientTester.new.methods.map { |m| m.to_sym }.should include(:users)
+    end
+
+    it "should not fail when presented with a multi-word resource" do
+      expect { 
+        class ClientTester
+          resource :admin_users
+        end
+      }.to_not raise_error(NameError)
+
     end
 
     it "should add a bang method with the name of the argument" do
