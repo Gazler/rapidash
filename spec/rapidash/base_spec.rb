@@ -26,11 +26,11 @@ describe Rapidash::Base do
   describe ".initialize" do
 
     it "should assume a default based on the class name" do
-      Base.new.instance_variable_get(:@url).should eql("base")
+      Base.new.instance_variable_get(:@url).should eql("bases")
     end
 
     it "should ignore any modules when infering the URL" do
-      Rapidash::Resource.new.instance_variable_get(:@url).should eql("resource")
+      Rapidash::Resource.new.instance_variable_get(:@url).should eql("resources")
     end
 
     it "should override the URL if set" do
