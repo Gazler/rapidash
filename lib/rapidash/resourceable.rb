@@ -10,9 +10,9 @@ module Rapidash
       def resource(*names)
         mod = self.to_s.split("::")[0...-1]
         if mod.empty?
-          mod = Kernel
+          mod = Object
         else
-          mod = Kernel.const_get(mod.join("::"))
+          mod = Object.const_get(mod.join("::"))
         end
 
 
