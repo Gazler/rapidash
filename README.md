@@ -37,7 +37,7 @@ end
 The URL of the resource will be inferred from the class name.  In this case Users.  If you want to override that, you can with the url method.
 
 ```ruby
-class Users < Rapidash::Base
+class User < Rapidash::Base
   url :members  # or url "members" is also supported
 end
 ```
@@ -45,10 +45,10 @@ end
 Resources can exist inside other resources.  For example, on Github, a user has repositories.  The following could be how you build the resources:
 
 ```ruby
-class Repos < Rapidash::Base
+class Repo < Rapidash::Base
 end
 
-class Users < Rapidash::Base
+class User < Rapidash::Base
   resource :repos
 end
 ```
@@ -58,7 +58,7 @@ end
 A root element can be set for create and post actions
 
 ```ruby
-class Posts < Rapidash::Base
+class Post < Rapidash::Base
 end
 
 client.posts.create!({:post => {:name => "a post"}})
@@ -67,7 +67,7 @@ client.posts.create!({:post => {:name => "a post"}})
 With a root element, the code would look like this:
 
 ```ruby
-class Posts < Rapidash::Base
+class Post < Rapidash::Base
   root :post
 end
 
@@ -115,6 +115,7 @@ client.users(1).delete!                                 #DELETE requst to /users
 require 'rapidash'
 
 class Me < Rapidash::Base
+  url "me"
 end
 
 class Facebook < Rapidash::Client
@@ -136,9 +137,9 @@ p client.me!.first_name #Gary
 ```ruby
 require 'rapidash'
 
-class Repos < Rapidash::Base
+class Repo < Rapidash::Base
 
-class Users < Rapidash::Base
+class User < Rapidash::Base
   resource :repos
 end
 

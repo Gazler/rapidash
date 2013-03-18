@@ -1,23 +1,23 @@
 require 'rapidash'
 
-class Repos < Rapidash::Base
+class Repo < Rapidash::Base
   def repo!(owner, repo)
     self.url += "/#{owner}/#{repo}"
     call!
   end
 end
 
-class Users < Rapidash::Base
+class User < Rapidash::Base
   resource :repos
 end
 
-class Emojis < Rapidash::Base
+class Emoji < Rapidash::Base
 end
 
-class Events < Rapidash::Base
+class Event < Rapidash::Base
 end
 
-class Gists < Rapidash::Base
+class Gist < Rapidash::Base
 
   def public!
     self.url += "/public"
@@ -26,7 +26,7 @@ class Gists < Rapidash::Base
 
 end
 
-class Organisations < Rapidash::Base
+class Organisation < Rapidash::Base
   url "orgs"
 end
 
