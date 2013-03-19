@@ -2,6 +2,7 @@ require 'spec_helper'
 
 class Client < Rapidash::Client
   method :test
+
 end
 
 describe Rapidash::Client do
@@ -48,7 +49,4 @@ describe Rapidash::Client do
       subject.delete("foo")
     end
   end
-
-
-
 end

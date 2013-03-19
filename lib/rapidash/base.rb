@@ -1,6 +1,5 @@
 module Rapidash
   class Base
-
     include Urlable
     include Resourceable
 
@@ -66,10 +65,8 @@ module Rapidash
     end
 
     def base_url
-      if old_url = self.options[:previous_url]
-        return "#{old_url}/"
-      end
-      ""
+      old_url = self.options[:previous_url]
+      old_url ? "#{old_url}/" : ""
     end
   end
 end
