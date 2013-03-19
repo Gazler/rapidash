@@ -1,12 +1,10 @@
 require "spec_helper"
 
-class OAuthClientTester
-  include Rapidash::Clientable
+class OAuthClientTester < Rapidash::Client
   method :oauth
 end
 
-class HTTPClientTester
-  include Rapidash::Clientable
+class HTTPClientTester < Rapidash::Client
   method :http
 end
 
@@ -22,17 +20,11 @@ class HTTPClientErrorTester < HTTPClientTester
   raise_errors
 end
 
-
-class TestClientTester
-  include Rapidash::Clientable
+class TestClientTester < Rapidash::Client
   method :test
 end
 
-
-
-
-describe Rapidash::Clientable do
-
+describe "Rapidash::Clientable" do
   describe "#included" do
     it "should include the method method" do
       HTTPClientTester.methods.map { |m| m.to_sym }.should include(:method)
@@ -40,7 +32,6 @@ describe Rapidash::Clientable do
   end
 
   describe "#method" do
-
     it "should include the HTTPClient" do
       client = HTTPClientTester.new
       client.class.ancestors.should include(Rapidash::HTTPClient)
@@ -58,13 +49,11 @@ describe Rapidash::Clientable do
 
     it "should raise an error on anything else" do
       expect {
-        class InvalidClientTester
-          include Rapidash::Clientable
+        class InvalidClientTester < Rapidash::Client
           method :invalid
         end
       }.to raise_error(Rapidash::ConfigurationError)
     end
-    
   end
 
   describe "#use_patch" do
@@ -75,7 +64,7 @@ describe Rapidash::Clientable do
 
   describe "#extension" do
     it "should set the url_extension variable" do
-      HTTPClientExtensionTester.new.class.instance_variable_get(:@url_extension).should eql(:json)
+      HTTPClientExtensionTester.new.class.instance_variable_get(:@extension).should eql(:json)
     end
   end
 
@@ -84,5 +73,4 @@ describe Rapidash::Clientable do
       HTTPClientErrorTester.new.class.instance_variable_get(:@raise_error).should eql(true)
     end
   end
-
 end

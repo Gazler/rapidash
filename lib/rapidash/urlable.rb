@@ -1,6 +1,5 @@
 module Rapidash
   module Urlable
-
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -14,6 +13,5 @@ module Rapidash
         end
       end
     end
-
   end
 end

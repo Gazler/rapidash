@@ -3,7 +3,6 @@ require 'hashie'
 
 module Rapidash
   class Response
-
     class << self
       def new(response)
         return nil unless response.body

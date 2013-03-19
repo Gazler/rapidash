@@ -1,6 +1,6 @@
 require "spec_helper"
 
-class HTTPTester
+class HTTPTester < Rapidash::Client
   include Rapidash::HTTPClient
 end
 
@@ -10,12 +10,13 @@ end
 
 class HTTPExtensionTester < HTTPTester
   site "http://mysite.com/"
-  def self.url_extension 
+  def self.extension
     :json
   end
 end
 
 class HTTPErrorTester < HTTPTester
+  site "http://mysite.com/"
   def self.raise_error
     true
   end
@@ -26,11 +27,13 @@ describe Rapidash::HTTPClient do
   let!(:subject) { HTTPTester.new }
 
   describe ".site=" do
-    it "should clear the connection variable" do
+    it "should clear the connection variable after set new site" do
       subject.instance_variable_get(:@connection).should eql(nil)
+      subject.site = "foo"
       subject.connection
       subject.instance_variable_get(:@connection).class.should eql(Faraday::Connection)
-      subject.site = "foo"
+
+      subject.site = "bar"
       subject.instance_variable_get(:@connection).should eql(nil)
     end
 
@@ -43,7 +46,14 @@ describe Rapidash::HTTPClient do
 
   describe ".connection" do
     it "should create a Faraday object" do
+      subject.site = "http://example.com/"
       subject.connection.class.should eql(Faraday::Connection)
+    end
+
+    it "should raise Configuration error if site nil" do
+      expect {
+        subject.connection
+      }.to raise_error(Rapidash::ConfigurationError)
     end
 
     it "should use the site variable if set" do
@@ -60,7 +70,6 @@ describe Rapidash::HTTPClient do
   end
 
   describe ".request" do
-
     let!(:valid_response) { OpenStruct.new(:status => "200")}
     let!(:redirect_response) { OpenStruct.new(:status => "301", :headers => {"location" => "http://example.com/redirect"})}
     let!(:error_response) { OpenStruct.new(:status => "404")}
@@ -81,7 +90,6 @@ describe Rapidash::HTTPClient do
     end
 
     describe "valid response" do
-
       before(:each) do
         Rapidash::Response.should_receive(:new).and_return("response")
       end
@@ -98,7 +106,6 @@ describe Rapidash::HTTPClient do
         subject.request(:get, "foo")
       end
 
-
       it "should return a response object" do
         subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(valid_response)
         response = subject.request(:get, "foo")
@@ -111,11 +118,9 @@ describe Rapidash::HTTPClient do
         response = subject.request(:get, "foo")
         response.should eql("response")
       end
-
     end
 
     describe "error response" do
-      
       it "should not raise an error by default" do
           subject.connection.should_receive(:run_request).with(:get, "http://example.com/error", nil, nil).and_return(error_response)
           response = subject.request(:get, "error")
@@ -126,7 +131,7 @@ describe Rapidash::HTTPClient do
           subject = HTTPErrorTester.new
           subject.connection.should_receive(:run_request).with(:get, anything, nil, nil).and_return(error_response)
           expect {
-            response = subject.request(:get, "error")
+            subject.request(:get, "error")
           }.to raise_error(Rapidash::ResponseError)
       end
 
