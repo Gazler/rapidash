@@ -24,7 +24,7 @@ module Rapidash
 
       @options ||= {}
       @options.merge!(options || {})
-      @url = "#{base_url}#{self.class.to_s.split("::")[-1].downcase}"
+      @url = "#{base_url}#{self.class.to_s.split("::")[-1].downcase.pluralize}"
       @url += "/#{@id}" if @id
     end
 

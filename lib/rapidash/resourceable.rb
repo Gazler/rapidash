@@ -10,15 +10,20 @@ module Rapidash
       def resource(*names)
         mod = self.to_s.split("::")[0...-1]
         if mod.empty?
-          mod = Kernel
+          mod = Object
         else
-          mod = Kernel.const_get(mod.join("::"))
+          mod = Object.const_get(mod.join("::"))
         end
 
 
 
         names.each do |name|
-          klass = mod.const_get(name.to_s.capitalize)
+          class_name = name.to_s.camelcase.singularize
+          unless mod.const_defined?(class_name)
+            class_name = class_name.pluralize 
+            Kernel.warn "Using #{class_name} instead of #{class_name.singularize}"
+          end
+          klass = mod.const_get(class_name)
 
           define_method(name) do |*args|
             if self.respond_to?(:url)
