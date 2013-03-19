@@ -5,18 +5,12 @@ class HTTPTester < Rapidash::Client
 end
 
 class HTTPSiteTester < HTTPTester
-  site "http://mysite.com/"
-end
-
-class HTTPExtensionTester < HTTPTester
-  site "http://mysite.com/"
-  def self.extension
-    :json
+  class << self
+    attr_accessor :site
   end
 end
 
-class HTTPErrorTester < HTTPTester
-  site "http://mysite.com/"
+class HTTPErrorTester < HTTPSiteTester
   def self.raise_error
     true
   end
@@ -25,24 +19,6 @@ end
 describe Rapidash::HTTPClient do
 
   let!(:subject) { HTTPTester.new }
-
-  describe ".site=" do
-    it "should clear the connection variable after set new site" do
-      subject.instance_variable_get(:@connection).should eql(nil)
-      subject.site = "foo"
-      subject.connection
-      subject.instance_variable_get(:@connection).class.should eql(Faraday::Connection)
-
-      subject.site = "bar"
-      subject.instance_variable_get(:@connection).should eql(nil)
-    end
-
-    it "should set the site variable" do
-      subject.instance_variable_get(:@site).should eql(nil)
-      subject.site = "foo"
-      subject.instance_variable_get(:@site).should eql("foo")
-    end
-  end
 
   describe ".connection" do
     it "should create a Faraday object" do
@@ -61,15 +37,35 @@ describe Rapidash::HTTPClient do
       subject.site = "http://example.com/"
       subject.connection
     end
-
-    it "should use the class URL if one is defined" do
-      subject = HTTPSiteTester.new
-      Faraday.should_receive(:new).with("http://mysite.com/")
-      subject.connection
-    end
   end
 
   describe ".request" do
+
+    before(:each) do
+      subject.site = "http://example.com"
+    end
+
+    describe "authorization" do
+      let!(:options) { { :login => "login", :password => "password" } }
+      let!(:subject) { HTTPTester.new(options) }
+
+      it "should authorize with login and password" do
+        subject.should_receive(:process_response).with("response", :get, {})
+        subject.connection.should_receive(:basic_auth).with(options[:login], options[:password])
+        subject.connection.stub_chain('app.call').and_return("response")
+        subject.request(:get, "foo")
+      end
+    end
+
+    it "should call response" do
+        subject.should_receive(:process_response).with("response", :get, {})
+      subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return("response")
+        subject.request(:get, "foo")
+    end
+  end
+
+  describe ".process_response" do
+
     let!(:valid_response) { OpenStruct.new(:status => "200")}
     let!(:redirect_response) { OpenStruct.new(:status => "301", :headers => {"location" => "http://example.com/redirect"})}
     let!(:error_response) { OpenStruct.new(:status => "404")}
@@ -78,60 +74,33 @@ describe Rapidash::HTTPClient do
       subject.site = "http://example.com"
     end
 
-    describe "authorization" do
-      let!(:options) { { :login => "login", :password => "password" } }
-      let!(:subject) { HTTPTester.new options }
-
-      it "should authorize with login and password" do
-        subject.connection.should_receive(:basic_auth).with(options[:login], options[:password])
-        subject.connection.stub_chain('app.call').and_return(valid_response)
-        subject.request(:get, "foo")
-      end
-    end
-
     describe "valid response" do
       before(:each) do
         Rapidash::Response.should_receive(:new).and_return("response")
       end
         
-      it "should add an extension if one is set" do
-        subject.extension = :json
-        subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo.json", nil, nil).and_return(valid_response)
-        subject.request(:get, "foo")
-      end
-
-      it "should use the class extension if one is set" do
-        subject = HTTPExtensionTester.new
-        subject.connection.should_receive(:run_request).with(:get, "http://mysite.com/foo.json", nil, nil).and_return(valid_response)
-        subject.request(:get, "foo")
-      end
-
       it "should return a response object" do
-        subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(valid_response)
-        response = subject.request(:get, "foo")
+        response = subject.process_response(valid_response, :get, {})
         response.should eql("response")
       end
 
       it "should perform a redirect" do
-        subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(redirect_response)
-        subject.connection.should_receive(:run_request).with(:get, "http://example.com/redirect", nil, nil).and_return(valid_response)
-        response = subject.request(:get, "foo")
+        subject.should_receive(:request).with(:get, "http://example.com/redirect", anything).and_return(subject.process_response(valid_response, :get, {}))
+        response = subject.process_response(redirect_response, :get, {})
         response.should eql("response")
       end
     end
 
     describe "error response" do
       it "should not raise an error by default" do
-          subject.connection.should_receive(:run_request).with(:get, "http://example.com/error", nil, nil).and_return(error_response)
-          response = subject.request(:get, "error")
-          response.should be_nil
+        response = subject.process_response(error_response, :get, {})
+        response.should be_nil
       end
 
       it "should raise an error if the option is set" do
           subject = HTTPErrorTester.new
-          subject.connection.should_receive(:run_request).with(:get, anything, nil, nil).and_return(error_response)
           expect {
-            subject.request(:get, "error")
+            response = subject.process_response(error_response, :get, {})
           }.to raise_error(Rapidash::ResponseError)
       end
 

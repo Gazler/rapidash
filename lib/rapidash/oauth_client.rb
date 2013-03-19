@@ -3,7 +3,7 @@ require 'hashie'
 
 module Rapidash
   module OAuthClient
-    attr_accessor :secret, :uid, :access_token
+    attr_accessor :secret, :uid, :access_token, :site
 
     def initialize(options)
       [:uid, :secret, :site].each do |key|

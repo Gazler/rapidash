@@ -126,6 +126,14 @@ describe Rapidash::Resourceable do
       users = Rapidash::User.new(client)
       users.repos.instance_variable_get(:@args)[0].keys.should include(:previous_url)
     end
+
+    it "should maintain the URL as well as the options when chaining" do
+      client = mock
+      users = Rapidash::User.new(client)
+      repos = users.repos(:params => {:foo => :bar})
+      repos.instance_variable_get(:@args)[0].should include(:params)
+      repos.instance_variable_get(:@args)[0].should include(:previous_url)
+    end
   end
 
 end

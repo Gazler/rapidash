@@ -24,8 +24,8 @@ module Rapidash
           define_method(name) do |*args|
             if self.respond_to?(:url)
               options = {:previous_url => self.url}
-              if args[args.length].is_a?(Hash)
-                args[args.length].merge!(options)
+              if args[args.length - 1].is_a?(Hash)
+                args[args.length - 1].merge!(options)
               else
                 args << options
               end

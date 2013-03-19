@@ -26,7 +26,7 @@ module Rapidash
       end
 
       def extension(extension = nil)
-        @extension = extension
+        @extension ||= extension
       end
 
       def site(site = nil)
