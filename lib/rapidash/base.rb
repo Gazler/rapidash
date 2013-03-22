@@ -49,8 +49,8 @@ module Rapidash
     def call!
       self.options ||= {}
       options.delete(:previous_url)
-      options[:header] ||= {}
-      options[:header]["content-type"] = "application/json"
+      options[:headers] ||= {}
+      options[:headers]["content-type"] = "application/json"
       method = options.delete(:method) || :get
       client.send(method, url, options)
     end

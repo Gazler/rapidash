@@ -118,13 +118,13 @@ describe Rapidash::Base do
   describe ".call!" do
     it "should call get on the client" do
       subject.url = "tester/1"
-      client.should_receive(:get).with("tester/1", {:header => headers})
+      client.should_receive(:get).with("tester/1", {:headers => headers})
       subject.call!
     end
 
 
     it "should call a post on the client if set" do
-      client.should_receive(:post).with("tester", {:header => headers})
+      client.should_receive(:post).with("tester", {:headers => headers})
       subject.options = {:method => :post}
       subject.url = "tester"
       subject.call!

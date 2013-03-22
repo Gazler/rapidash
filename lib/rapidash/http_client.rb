@@ -29,7 +29,7 @@ module Rapidash
         url = "#{url}.#{(self.class.url_extension)}"
       end
       url = connection.build_url(url, options[:params]).to_s
-      response = connection.run_request(verb, url, options[:body], options[:header])
+      response = connection.run_request(verb, url, options[:body], options[:headers])
 
       # "foo"[0] does not work in 1.8.7, "foo"[0,1] is required
       case response.status.to_s[0,1]
