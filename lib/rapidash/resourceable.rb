@@ -36,7 +36,14 @@ module Rapidash
           end
 
           define_method("#{name}!".to_sym) do |*args|
-            self.send(name, *args).call!
+            model = self.send(name, *args)
+            result = model.call!
+
+            if model.class.respond_to?(:root_element) && model.class.root_element
+              result[model.class.root_element.to_s]
+            else
+              result
+            end
           end
         end
       end
