@@ -136,4 +136,24 @@ describe Rapidash::Resourceable do
     end
   end
 
+  describe "Add previous_url before create resource" do
+    let!(:client) { stub }
+    let!(:users) { Rapidash::User.new(client) }
+
+    before do
+      Rapidash::User.any_instance.stub(:url) { "previous url" }
+    end
+
+    context "with hash" do
+      before { Rapidash::Repo.should_receive(:new).with(client, :foobar, {:previous_url => "previous url", :foo => :bar}) }
+
+      it { users.repos(:foobar, :foo => :bar) }
+    end
+
+    context "without hash" do
+      before { Rapidash::Repo.should_receive(:new).with(client, :foobar, { :previous_url => "previous url" }) }
+
+      it { users.repos(:foobar) }
+    end
+  end
 end

@@ -24,8 +24,8 @@ module Rapidash
           define_method(name) do |*args|
             if self.respond_to?(:url)
               options = {:previous_url => self.url}
-              if args[args.length - 1].is_a?(Hash)
-                args[args.length - 1].merge!(options)
+              if args.last.is_a?(Hash)
+                args.last.merge!(options)
               else
                 args << options
               end
@@ -36,7 +36,14 @@ module Rapidash
           end
 
           define_method("#{name}!".to_sym) do |*args|
-            self.send(name, *args).call!
+            model = self.send(name, *args)
+            result = model.call!
+
+            if model.class.respond_to?(:root_element) && model.class.root_element
+              result[model.class.root_element.to_s]
+            else
+              result
+            end
           end
         end
       end

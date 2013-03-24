@@ -51,6 +51,7 @@ module Rapidash
       options[:header] ||= {}
       options[:header]["content-type"] = "application/json"
       method = options.delete(:method) || :get
+
       client.send(method, url, options)
     end
 
