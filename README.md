@@ -74,6 +74,21 @@ end
 client.posts.create!(:name => "a post")
 ```
 
+### Class Name and module
+
+If you use modules in your project or use different class from resource name, you can set class name for resource
+
+```ruby
+module MyModule
+  class MyResource < Rapidash::Base
+  end
+end
+
+class AnotherResource < Rapidash::Base
+  resource :my_cool_resource, :class_name => "MyModule::MyResource"
+end
+```
+
 ### Client
 
 The main thing a client must do is define a method, `oauth` and `http` are currently supported.  You can also define resources which links a resource as defined above to the client.

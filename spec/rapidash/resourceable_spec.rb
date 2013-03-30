@@ -136,4 +136,29 @@ describe Rapidash::Resourceable do
     end
   end
 
+  describe "resource with module" do
+    module Facebook
+      class User
+        def initialize(*args)
+        end
+      end
+
+      module Its
+        module A
+          class DeepResource
+          end
+        end
+      end
+    end
+
+    class ModuleTester
+      include Rapidash::Resourceable
+      resource :users, :class_name => "Facebook::User"
+      resource :deep_resources, :class_name => "Facebook::Its::A::DeepResource"
+    end
+
+    it "should find user in another module" do
+      ModuleTester.new.users.class.should eql(Facebook::User)
+    end
+  end
 end

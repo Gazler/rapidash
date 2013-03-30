@@ -6,6 +6,8 @@ module Rapidash
 
     module ClassMethods
       def resource(*names)
+        options = names.extract_options!
+
         mod = self.to_s.split("::")[0...-1]
         if mod.empty?
           mod = Object
@@ -14,12 +16,18 @@ module Rapidash
         end
 
         names.each do |name|
-          class_name = name.to_s.camelcase.singularize
-          unless mod.const_defined?(class_name)
-            class_name = class_name.pluralize 
-            Kernel.warn "Using #{class_name} instead of #{class_name.singularize}"
+          if options[:class_name]
+            class_name = options[:class_name]
+          else
+            class_name = name.to_s.camelcase.singularize
           end
-          klass = mod.const_get(class_name)
+
+          begin
+            klass = "#{mod}::#{class_name}".constantize
+          rescue NameError
+            klass = class_name.pluralize.constantize
+            Kernel.warn "Using #{class_name.pluralize} instead of #{class_name.singularize}"
+          end
 
           define_method(name) do |*args|
             if self.respond_to?(:url)
