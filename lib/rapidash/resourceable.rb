@@ -4,6 +4,21 @@ module Rapidash
       base.extend ClassMethods
     end
 
+    def resource(name, id = nil, options = {})
+      options[:url] ||= name
+      if self.respond_to?(:url)
+        options = {:previous_url => self.url}.merge!(options)
+      end
+      client = self
+      client = self.client if self.respond_to?(:client)
+      Rapidash::Base.new(client, id, options)
+    end
+
+    def resource!(*args)
+      self.resource(*args).call!
+    end
+
+
     module ClassMethods
       def resource(*names)
         options = names.extract_options!
