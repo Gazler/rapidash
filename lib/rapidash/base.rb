@@ -59,9 +59,9 @@ module Rapidash
 
     def set_body!(params)
       if self.class.root_element
-        options[:body] = {self.class.root_element => params}.to_json
+        options[:body] = {self.class.root_element => params}
       else
-        options[:body] = params.to_json
+        options[:body] = params
       end
     end
 

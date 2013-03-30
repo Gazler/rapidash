@@ -94,6 +94,18 @@ describe Rapidash::OAuthClient do
       end
       
     end
+
+    describe "when a body is set" do
+      it "should call oauth_access_token.send with errors set" do
+        subject.stub(:normalize_url).and_return("users")
+        subject.stub(:oauth_access_token).and_return(request)
+        request.should_receive(:send).with(:get, "http://example.com/users", {:body => {"foo" => "bar"}.to_json, :raise_errors => false})
+        subject.request(:get, "error", :body => {"foo" => "bar"})
+      end
+      
+    end
+
+
   end
 end
 

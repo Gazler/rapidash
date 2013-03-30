@@ -21,6 +21,7 @@ module Rapidash
 
     def request(verb, url, options = {})
       url = normalize_url(url)
+      options[:body] = options[:body].to_json if options[:body]
       options[:raise_errors] = self.class.respond_to?(:raise_error) && self.class.raise_error
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
 

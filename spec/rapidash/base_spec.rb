@@ -60,7 +60,7 @@ describe Rapidash::Base do
       subject.create!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :post,
-        :body => post.to_json
+        :body => post
       })
     end
 
@@ -70,7 +70,7 @@ describe Rapidash::Base do
       subject.create!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :post,
-        :body => post.to_json
+        :body => post
       })
     end
   end
@@ -81,7 +81,7 @@ describe Rapidash::Base do
       subject.update!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :put,
-        :body => post.to_json
+        :body => post
       })
     end
 
@@ -91,7 +91,7 @@ describe Rapidash::Base do
       subject.update!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :patch,
-        :body => post.to_json
+        :body => post
       })
     end
 
@@ -101,7 +101,7 @@ describe Rapidash::Base do
       subject.update!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :patch,
-        :body => post.to_json
+        :body => post
       })
     end
   end

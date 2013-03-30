@@ -6,6 +6,7 @@ module Rapidash
     class << self
       def new(response)
         return nil unless response.body
+        return nil if response.body.empty?
         return nil if response.body == "null"
         type = response.headers["content-type"]
         body = JSON.parse(response.body)

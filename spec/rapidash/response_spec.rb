@@ -41,6 +41,16 @@ def valid_null_response_object
   })
 end
 
+def valid_empty_response_object
+  body = ""
+  OpenStruct.new({
+    :headers => {
+      "content-type" => "application/json"
+    },
+    :body => body
+  })
+end
+
 
 def valid_response_array
   body = [{"foo" => "bar" }, {"baz" => "bra"}].to_json
@@ -99,6 +109,12 @@ describe Rapidash::Response do
       response = Rapidash::Response.new(valid_null_response_object)
       response.should eql(nil)
     end
+
+    it "should parse an empty body" do
+      response = Rapidash::Response.new(valid_empty_response_object)
+      response.should eql(nil)
+    end
+
 
     it "should parse JSON Arrays" do
       response = Rapidash::Response.new(valid_response_array)
