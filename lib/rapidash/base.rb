@@ -1,6 +1,5 @@
 module Rapidash
   class Base
-
     include Urlable
     include Resourceable
 
@@ -24,7 +23,7 @@ module Rapidash
 
       @options ||= {}
       @options.merge!(options || {})
-      @url = "#{base_url}#{self.class.to_s.split("::")[-1].downcase}"
+      @url = "#{base_url}#{resource_url}"
       @url += "/#{@id}" if @id
     end
 
@@ -55,6 +54,7 @@ module Rapidash
       client.send(method, url, options)
     end
 
+
     private
 
     def set_body!(params)
@@ -66,10 +66,12 @@ module Rapidash
     end
 
     def base_url
-      if old_url = self.options[:previous_url]
-        return "#{old_url}/"
-      end
-      ""
+      old_url = self.options[:previous_url]
+      old_url ? "#{old_url}/" : ""
+    end
+
+    def resource_url
+      self.options[:url] || self.class.to_s.split("::")[-1].downcase.pluralize
     end
   end
 end

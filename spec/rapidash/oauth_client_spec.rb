@@ -4,12 +4,6 @@ class OAuthTester
   include Rapidash::OAuthClient
 end
 
-class OAuthExtensionTester < OAuthTester
-  def self.url_extension 
-    :json
-  end
-end
-
 class OAuthErrorTester < OAuthTester
   def self.raise_error
     true
@@ -31,16 +25,25 @@ describe Rapidash::OAuthClient do
     }
   }
 
- let(:subject) { OAuthTester.new(options) }
+  let(:subject) { OAuthTester.new(options) }
 
+  describe ".initialize" do
 
-  describe ".site" do
-    it "should be example.com" do
-      subject.site.should eql("http://example.com")
+    it "should not raise an error with the correct options" do
+      expect {
+        OAuthTester.new(options)
+      }.to_not raise_error(Rapidash::ConfigurationError)
+    end
+
+    it "should raise an error if the correct options are not set" do
+      expect {
+        OAuthTester.new({})
+      }.to raise_error(Rapidash::ConfigurationError)
     end
   end
 
-  describe ".access_token_from_code" do
+
+ describe ".access_token_from_code" do
     it "should call localhost for the access token" do
       auth_code = mock
       client = mock
@@ -70,24 +73,10 @@ describe Rapidash::OAuthClient do
     describe "object returned from API call" do
 
       before(:each) do
-        subject.extension = :json
         subject.stub(:oauth_access_token).and_return(request)
+        subject.stub(:normalize_url).with("me").and_return("me")
         request.stub(:get)
       end
-
-      it "should add an extension to the url if one is set" do
-        request.should_receive(:get).with("http://example.com/me.json", anything)
-        subject.request(:get, "me")
-      end
-
-      it "should use the class extension if one is set" do
-        subject = OAuthExtensionTester.new(options)
-        subject.stub(:oauth_access_token).and_return(request)
-        request.stub(:get)
-        request.should_receive(:get).with("http://example.com/me.json", anything)
-        subject.request(:get, "me")
-      end
-
 
       it "should return a Hashie::Mash" do
         subject.request(:get, "me").class.should eql(Hashie::Mash)
@@ -98,6 +87,7 @@ describe Rapidash::OAuthClient do
     describe "when errors are set" do
       it "should call oauth_access_token.send with errors set" do
         subject = OAuthErrorTester.new(options)
+        subject.stub(:normalize_url).and_return("error")
         subject.stub(:oauth_access_token).and_return(request)
         request.should_receive(:send).with(:get, "http://example.com/error", {:raise_errors => true})
         subject.request(:get, "error")
@@ -105,7 +95,5 @@ describe Rapidash::OAuthClient do
       
     end
   end
-
-
 end
 

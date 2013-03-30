@@ -1,10 +1,12 @@
+#Required for pluralization and camelcasing
+require "active_support/core_ext/string"
+
 require "rapidash/version"
 
 require "rapidash/errors"
 
 require "rapidash/response"
 
-require "rapidash/clientable"
 require "rapidash/resourceable"
 require "rapidash/client"
 

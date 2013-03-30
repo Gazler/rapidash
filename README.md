@@ -41,7 +41,7 @@ end
 The URL of the resource will be inferred from the class name.  In this case Users.  If you want to override that, you can with the url method.
 
 ```ruby
-class Users < Rapidash::Base
+class User < Rapidash::Base
   url :members  # or url "members" is also supported
 end
 ```
@@ -49,10 +49,10 @@ end
 Resources can exist inside other resources.  For example, on Github, a user has repositories.  The following could be how you build the resources:
 
 ```ruby
-class Repos < Rapidash::Base
+class Repo < Rapidash::Base
 end
 
-class Users < Rapidash::Base
+class User < Rapidash::Base
   resource :repos
 end
 ```
@@ -62,7 +62,7 @@ end
 A root element can be set for create and post actions
 
 ```ruby
-class Posts < Rapidash::Base
+class Post < Rapidash::Base
 end
 
 client.posts.create!({:post => {:name => "a post"}})
@@ -71,11 +71,26 @@ client.posts.create!({:post => {:name => "a post"}})
 With a root element, the code would look like this:
 
 ```ruby
-class Posts < Rapidash::Base
+class Post < Rapidash::Base
   root :post
 end
 
 client.posts.create!(:name => "a post")
+```
+
+### Class Names and Classes In Different Modules
+
+If you wish to use a class in a different module or a class with a different name as the class for your resource then you can use the `:class_name` option.
+
+```ruby
+module MyModule
+  class MyResource < Rapidash::Base
+  end
+end
+
+class AnotherResource < Rapidash::Base
+  resource :my_cool_resource, :class_name => "MyModule::MyResource"
+end
 ```
 
 ### Client
@@ -119,6 +134,7 @@ client.users(1).delete!                                 #DELETE requst to /users
 require 'rapidash'
 
 class Me < Rapidash::Base
+  url "me"
 end
 
 class Facebook < Rapidash::Client
@@ -140,9 +156,9 @@ p client.me!.first_name #Gary
 ```ruby
 require 'rapidash'
 
-class Repos < Rapidash::Base
+class Repo < Rapidash::Base
 
-class Users < Rapidash::Base
+class User < Rapidash::Base
   resource :repos
 end
 
@@ -157,13 +173,30 @@ p client.users!("Gazler").name           #Gary Rennie
 p client.users("Gazler").repos![0].name  #Githug
 ```
 
+### HTTP Authentication
+
+```ruby
+require 'rapidash'
+
+class Client < Rapidash::Client
+  method :http
+  site "your site"
+end
+
+client = Client.new({
+  :login => "your login",
+  :password => "your password",
+})
+```
+
 ## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+4. Write your tests, start and check coverage: open file coverage/index.html in your browser. Must be 100.0% covered
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request (into the development branch)
 
 ## Credits
 

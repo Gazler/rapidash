@@ -1,2 +1,5 @@
-require "./lib/rapidash"
+require "simplecov"
+SimpleCov.start
+
+require "rapidash"
 require "ostruct"

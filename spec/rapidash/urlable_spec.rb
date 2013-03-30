@@ -28,7 +28,7 @@ describe Rapidash::Urlable do
 
   describe "#url" do
     it "should override the initialize to set a url" do
-      ApiTesterNoUrl.new.instance_variable_get(:@url).should eql("apitesternourl")
+      ApiTesterNoUrl.new.instance_variable_get(:@url).should eql("apitesternourls")
       ApiTester.new.instance_variable_get(:@url).should eql("foo")
     end
 
