@@ -9,11 +9,7 @@ module Rapidash
         options = names.extract_options!
 
         mod = self.to_s.split("::")[0...-1]
-        if mod.empty?
-          mod = Object
-        else
-          mod = Object.const_get(mod.join("::"))
-        end
+        mod = mod.empty? ? Object : Object.const_get(mod.join("::"))
 
         names.each do |name|
           if options[:class_name]
@@ -25,8 +21,8 @@ module Rapidash
           begin
             klass = "#{mod}::#{class_name}".constantize
           rescue NameError
-            klass = class_name.pluralize.constantize
             Kernel.warn "Using #{class_name.pluralize} instead of #{class_name.singularize}"
+            klass = "#{mod}::#{class_name}".pluralize.constantize
           end
 
           define_method(name) do |*args|
