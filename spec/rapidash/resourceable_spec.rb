@@ -143,9 +143,16 @@ describe Rapidash::Resourceable do
         end
       end
 
-      module Its
-        module A
-          class DeepResource
+      class Posts
+        def initialize(*args)
+        end
+      end
+    end
+
+    module Its
+      module A
+        class DeepResource
+          def initialize(*args)
           end
         end
       end
@@ -154,11 +161,20 @@ describe Rapidash::Resourceable do
     class ModuleTester
       include Rapidash::Resourceable
       resource :users, :class_name => "Facebook::User"
-      resource :deep_resources, :class_name => "Facebook::Its::A::DeepResource"
+      resource :posts, :class_name => Facebook::Posts
+      resource :deep_resources, :class_name => Its::A::DeepResource
     end
 
     it "should find user in another module" do
       ModuleTester.new.users.class.should eql(Facebook::User)
+    end
+
+    it "should allow a plural class name" do
+      ModuleTester.new.posts.class.should eql(Facebook::Posts)
+    end
+
+    it "should find deep_resource in a nested module" do
+      ModuleTester.new.deep_resources.class.should eql(Its::A::DeepResource)
     end
   end
 end

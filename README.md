@@ -74,9 +74,9 @@ end
 client.posts.create!(:name => "a post")
 ```
 
-### Class Name and module
+### Class Names and Classes In Different Modules
 
-If you use modules in your project or use different class from resource name, you can set class name for resource
+If you wish to use a class in a different module or a class with a different name as the class for your resource then you can use the `:class_name` option.
 
 ```ruby
 module MyModule
