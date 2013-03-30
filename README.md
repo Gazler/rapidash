@@ -25,6 +25,10 @@ A screencast on Rapidash is available to watch in mp4 and ogv formats.
  * [Rapidash Screencast mp4](http://screencasts.gazler.com/rapidash.mp4)
  * [Rapidash Screencast ogv](http://screencasts.gazler.com/rapidash.ogv)
 
+### Sample Rails app
+
+A sample rails app is available at [https://github.com/Gazler/rapidash-tester](https://github.com/Gazler/rapidash-tester) it provides a rails server and a Rapidash client.  Please note that the client is also used as a form of integration test for rapidash.
+
 ### Resources
 
 Resources can be defined as follows:
