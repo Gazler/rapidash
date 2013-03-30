@@ -58,6 +58,62 @@ describe Rapidash::Resourceable do
 
   end
 
+
+  describe "instance methods" do
+    let(:client) { ClientTester.new }
+
+    describe ".resource" do
+
+
+      it "should create a Rapidash::Base" do
+        client.resource(:users, 1).class.should eql(Rapidash::Base)
+      end
+
+      it "should set the url to the resource name" do
+        resource = client.resource(:users)
+        resource.url.should eql("users")
+      end
+
+      it "should pass the id through if specified" do
+        resource = client.resource(:users, 1)
+        resource.url.should eql("users/1")
+      end
+
+      it "should pass the previous url through" do
+        def client.url
+          "base"
+        end
+        resource = client.resource(:users, 1)
+        resource.url.should eql("base/users/1")
+      end
+
+      it "should pass the client through" do
+        resource = client.resource(:users, 1)
+        resource.client.should eql(client)
+      end
+
+      it "should allow an explicit url to be sent" do
+        resource = client.resource(:users, 1, :url => "people")
+        resource.url.should eql("people/1")
+      end
+
+      it "should be chainable" do
+        resource = client.resource(:users, 1).resource(:comments, 2)
+        resource.url.should eql("users/1/comments/2")
+        resource.client.should eql(client)
+      end
+    end
+
+    describe ".resource!" do
+      it "should call the call! method on a resource" do
+        resource = mock
+        Rapidash::Base.stub(:new).and_return(resource)
+        resource.should_receive(:call!)
+        client.resource!(:users, 1)
+      end
+    end
+  end
+
   describe "#resource" do
     it "should add a method with the name of the argument" do
       Rapidash::ClientTester.new.methods.map { |m| m.to_sym }.should include(:users)
