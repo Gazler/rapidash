@@ -23,7 +23,7 @@ module Rapidash
 
       @options ||= {}
       @options.merge!(options || {})
-      @url = "#{base_url}#{self.class.to_s.split("::")[-1].downcase.pluralize}"
+      @url = "#{base_url}#{resource_url}"
       @url += "/#{@id}" if @id
     end
 
@@ -54,6 +54,7 @@ module Rapidash
       client.send(method, url, options)
     end
 
+
     private
 
     def set_body!(params)
@@ -67,6 +68,10 @@ module Rapidash
     def base_url
       old_url = self.options[:previous_url]
       old_url ? "#{old_url}/" : ""
+    end
+
+    def resource_url
+      self.options[:url] || self.class.to_s.split("::")[-1].downcase.pluralize
     end
   end
 end

@@ -142,4 +142,16 @@ describe Rapidash::Base do
     end
   end
 
+  describe ".resource_url" do
+    it "should return the class name as a url if none is specified" do
+      subject.send(:resource_url).should eql("basetesters")
+    end
+
+    it "should return the previous url if set" do
+      subject.options = {:url => "people"}
+      subject.send(:resource_url).should eql("people")
+    end
+  end
+
+
 end
