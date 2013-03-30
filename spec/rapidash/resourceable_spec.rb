@@ -72,7 +72,7 @@ describe Rapidash::Resourceable do
     end
 
     it "should load the plural class with a warning if the singular is not defined" do
-      Kernel.should_receive(:warn).with("Using CoreMembers instead of CoreMember")
+      Kernel.should_receive(:warn).with("[DEPRECATED] - RAPIDASH WARNING using CoreMembers instead of CoreMember - please either use `CoreMember` or set the class name with `resource core_members, :class_name => CoreMembers` implicit plural naming will be deprecated in Rapidash 1.0")
       class ClientTester
         resource :core_members
       end

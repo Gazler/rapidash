@@ -21,7 +21,7 @@ module Rapidash
           begin
             klass = "#{mod}::#{class_name}".constantize
           rescue NameError
-            Kernel.warn "Using #{class_name.pluralize} instead of #{class_name.singularize}"
+            Kernel.warn "[DEPRECATED] - RAPIDASH WARNING using #{class_name.pluralize} instead of #{class_name.singularize} - please either use `#{class_name.singularize}` or set the class name with `resource #{name}, :class_name => #{class_name.pluralize}` implicit plural naming will be deprecated in Rapidash 1.0"
             klass = "#{mod}::#{class_name}".pluralize.constantize
           end
 
