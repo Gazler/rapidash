@@ -242,5 +242,18 @@ describe Rapidash::Resourceable do
     it "should find deep_posts in a nested class name" do
       ModuleTester.new.deep_posts.class.should eql(SomeModule::SomeSubModule::Post)
     end
+
+    it "should not raise a wrong constant NameError" do
+      expect {
+        module Deep
+          module ModuleTester
+            class MyResource < Rapidash::Base
+              resource :users, class_name: "Facebook::User"
+            end
+          end
+        end
+      }.to_not raise_error(NameError)
+    end
+
   end
 end
