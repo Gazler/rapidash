@@ -120,7 +120,7 @@ describe Rapidash::Resourceable do
     end
 
     it "should not fail when presented with a multi-word resource" do
-      expect { 
+      expect {
         class ClientTester
           resource :admin_users
         end
@@ -205,9 +205,14 @@ describe Rapidash::Resourceable do
       end
     end
 
-    module Its
-      module A
-        class DeepResource
+    module SomeModule
+      module SomeSubModule
+        class User
+          def initialize(*args)
+          end
+        end
+
+        class Post
           def initialize(*args)
           end
         end
@@ -218,7 +223,8 @@ describe Rapidash::Resourceable do
       include Rapidash::Resourceable
       resource :users, :class_name => "Facebook::User"
       resource :posts, :class_name => Facebook::Posts
-      resource :deep_resources, :class_name => Its::A::DeepResource
+      resource :deep_users, :class_name => "SomeModule::SomeSubModule::User"
+      resource :deep_posts, :class_name => SomeModule::SomeSubModule::Post
     end
 
     it "should find user in another module" do
@@ -229,8 +235,25 @@ describe Rapidash::Resourceable do
       ModuleTester.new.posts.class.should eql(Facebook::Posts)
     end
 
-    it "should find deep_resource in a nested module" do
-      ModuleTester.new.deep_resources.class.should eql(Its::A::DeepResource)
+    it "should find deep_users in a nested module" do
+      ModuleTester.new.deep_users.class.should eql(SomeModule::SomeSubModule::User)
     end
+
+    it "should find deep_posts in a nested class name" do
+      ModuleTester.new.deep_posts.class.should eql(SomeModule::SomeSubModule::Post)
+    end
+
+    it "should not raise a wrong constant NameError" do
+      expect {
+        module Deep
+          module ModuleTester
+            class MyResource < Rapidash::Base
+              resource :users, :class_name => "Facebook::User"
+            end
+          end
+        end
+      }.to_not raise_error(NameError)
+    end
+
   end
 end

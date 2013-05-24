@@ -24,20 +24,24 @@ module Rapidash
         options = names.extract_options!
 
         mod = self.to_s.split("::")[0...-1]
-        mod = mod.empty? ? Object : Object.const_get(mod.join("::"))
+        mod = mod.empty? ? Object : mod.join("::").constantize
 
         names.each do |name|
           if options[:class_name]
-            class_name = options[:class_name]
+            class_name = options[:class_name].to_s
           else
             class_name = name.to_s.camelcase.singularize
+
+            unless mod == Object
+              class_name = "#{mod}::#{class_name}"
+            end
           end
 
           begin
-            klass = "#{mod}::#{class_name}".constantize
+            klass = class_name.constantize
           rescue NameError
             Kernel.warn "[DEPRECATED] - RAPIDASH WARNING using #{class_name.pluralize} instead of #{class_name.singularize} - please either use `#{class_name.singularize}` or set the class name with `resource #{name}, :class_name => #{class_name.pluralize}` implicit plural naming will be deprecated in Rapidash 1.0"
-            klass = "#{mod}::#{class_name}".pluralize.constantize
+            klass = class_name.pluralize.constantize
           end
 
           define_method(name) do |*args|
