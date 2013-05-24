@@ -31,7 +31,10 @@ module Rapidash
             class_name = options[:class_name].to_s
           else
             class_name = name.to_s.camelcase.singularize
-            class_name = "#{mod}::#{class_name}" unless mod == Object
+
+            unless mod == Object
+              class_name = "#{mod}::#{class_name}"
+            end
           end
 
           begin
