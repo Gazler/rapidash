@@ -24,7 +24,7 @@ module Rapidash
         options = names.extract_options!
 
         mod = self.to_s.split("::")[0...-1]
-        mod = mod.empty? ? Object : Object.const_get(mod.join("::"))
+        mod = mod.empty? ? Object : mod.join("::").constantize
 
         names.each do |name|
           if options[:class_name]
