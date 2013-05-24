@@ -248,7 +248,7 @@ describe Rapidash::Resourceable do
         module Deep
           module ModuleTester
             class MyResource < Rapidash::Base
-              resource :users, class_name: "Facebook::User"
+              resource :users, :class_name => "Facebook::User"
             end
           end
         end
