@@ -28,7 +28,7 @@ module Rapidash
 
         names.each do |name|
           if options[:class_name]
-            class_name = options[:class_name]
+            class_name = options[:class_name].to_s
           else
             class_name = name.to_s.camelcase.singularize
             class_name = "#{mod}::#{class_name}"
