@@ -19,7 +19,10 @@ module Rapidash
         builder.request :json
 
         builder.use Faraday::Request::BasicAuthentication, login, password
-        builder.use Faraday::Response::RaiseRapidashError
+
+        if self.class.respond_to?(:raise_error) && self.class.raise_error
+          builder.use Faraday::Response::RaiseRapidashError
+        end
 
         builder.use FaradayMiddleware::FollowRedirects
         builder.use FaradayMiddleware::Mashify
