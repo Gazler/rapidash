@@ -18,23 +18,24 @@ module Rapidash
   #     response.status # => 422
   #     response.method # => "POST"
   #     response.url # => "http://acme.com/api/v1/posts.json"
-  #     response.body # => "{"errors":[{"title":["can't be blank"]},{"body":["can't be blank"]}]}"
+  #     response.body # => "{"errors":["title can't be blank", "body can't be blank"]}"
   #   end
   #
   # Hint: Can be easily sub-classed to provide a custom exception handler class
-  # with specific error formatting:
+  # with specific error formatting. Defining an `errors` method that returns a String or Array
+  # will include the errors in the exception message:
   #
   #   class MyCustomResponseError < Rapidash::ResponseError
   #     def errors
   #       data = JSON.parse(body)
-  #       data[:errors]
+  #       data['errors']
   #     end
   #   end
   #
   #   Rapidash.response_exception_class = MyCustomResponseError
   #
   #   client.posts.create!(title: '')
-  #   MyCustomResponseError: 422 POST http://acme.com/api/v1/posts.json
+  #   MyCustomResponseError: 422 POST http://acme.com/api/v1/posts.json | Errors: title can't be blank, body can't be blank
   #
   #   begin
   #     client.posts.create!(title: '')
@@ -60,7 +61,14 @@ module Rapidash
     private
 
     def message
-      "#{status} #{method} #{url}"
+      msg = "#{status} #{method} #{url}"
+
+      if respond_to?(:errors) && !(errors.blank?)
+        errors.map(&:to_s).join(', ') if errors.kind_of?(Array)
+        msg = "#{msg} | Errors: {errors.to_s}"
+      end
+
+      msg
     end
   end
 end
