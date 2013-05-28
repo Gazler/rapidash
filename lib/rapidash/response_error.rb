@@ -1,5 +1,48 @@
 module Rapidash
-  # Custom error class for rescuing from all Basecamp errors
+
+  # Rapidash::ResponseError
+  # Exception that gets raised if the response is an error (4xx or 5xx)
+  # Raised by Faraday::Response::RaiseRapidashError
+  # see lib/faraday/response/raise_rapidash_error.rb
+  #
+  # Formats a readable error message including HTTP status, method and requested URL
+  #
+  # Examples:
+  #
+  #   client.posts.create!(title: '')
+  #   Rapidash::ResponseError: 422 POST http://acme.com/api/v1/posts.json
+  #
+  #   begin
+  #     client.posts.create!(title: '')
+  #   rescue Rapidash::ResponseError => response
+  #     response.status # => 422
+  #     response.method # => "POST"
+  #     response.url # => "http://acme.com/api/v1/posts.json"
+  #     response.body # => "{"errors":[{"title":["can't be blank"]},{"body":["can't be blank"]}]}"
+  #   end
+  #
+  # Hint: Can be easily sub-classed to provide a custom exception handler class
+  # with specific error formatting:
+  #
+  #   class MyCustomResponseError < Rapidash::ResponseError
+  #     def errors
+  #       data = JSON.parse(body)
+  #       data[:errors]
+  #     end
+  #   end
+  #
+  #   Rapidash.response_exception_class = MyCustomResponseError
+  #
+  #   client.posts.create!(title: '')
+  #   MyCustomResponseError: 422 POST http://acme.com/api/v1/posts.json
+  #
+  #   begin
+  #     client.posts.create!(title: '')
+  #   rescue Rapidash::ResponseError => response
+  #     response.status # => 422
+  #     response.errors # => ["title can't be blank", "body can't be blank"]
+  #   end
+  #
   class ResponseError < StandardError
     attr_reader :response, :body, :status, :method, :url
 
@@ -11,27 +54,13 @@ module Rapidash
       @method = response[:method].to_s.upcase
       @url = response[:url]
 
-      super(build_message)
+      super(message)
     end
 
     private
 
-    def build_message
-      return nil if response.blank?
-
-      if body.kind_of?(String)
-        message = body
-      else
-        errors = []
-
-        body.each_pair do |attribute, messages|
-          messages.each { |msg| errors.push "#{attribute} #{msg}" }
-        end
-
-        message = errors.join(', ')
-      end
-
-      "#{status} #{method} #{url} | Errors: #{message}"
+    def message
+      "#{status} #{method} #{url}"
     end
   end
 end
