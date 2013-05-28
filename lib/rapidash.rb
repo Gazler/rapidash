@@ -3,8 +3,6 @@ require "active_support/core_ext/string"
 
 require "rapidash/version"
 
-require "rapidash/errors"
-
 require "rapidash/response"
 
 require "rapidash/resourceable"
@@ -18,4 +16,6 @@ require "rapidash/oauth_client"
 require "rapidash/test_client"
 
 module Rapidash
+  class ParseError < StandardError; end
+  class ConfigurationError < StandardError; end
 end
