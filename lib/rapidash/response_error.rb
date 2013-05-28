@@ -65,7 +65,7 @@ module Rapidash
 
       if respond_to?(:errors) && !(errors.blank?)
         errors.map(&:to_s).join(', ') if errors.kind_of?(Array)
-        msg = "#{msg} | Errors: {errors.to_s}"
+        msg = "#{msg} | Errors: #{errors.to_s}"
       end
 
       msg
