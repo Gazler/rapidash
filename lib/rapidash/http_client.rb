@@ -19,6 +19,7 @@ module Rapidash
         builder.request :json
 
         builder.use Faraday::Request::BasicAuthentication, login, password
+        builder.use Faraday::Response::RaiseRapidashError
 
         builder.use FaradayMiddleware::FollowRedirects
         builder.use FaradayMiddleware::Mashify
