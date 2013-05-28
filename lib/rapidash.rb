@@ -17,7 +17,7 @@ require "rapidash/oauth_client"
 require "rapidash/test_client"
 
 module Rapidash
-  mattr_accessor :error_class
+  mattr_accessor :response_exception_class
 
   class ParseError < StandardError; end
   class ConfigurationError < StandardError; end
