@@ -16,7 +16,7 @@ module Rapidash
       raise ConfigurationError.new "Site is required" unless site
 
       @connection ||= Faraday.new(site) do |builder|
-        builder.request :json
+        builder.request self.class.encode_post_data_with
 
         builder.use Faraday::Request::BasicAuthentication, login, password
 

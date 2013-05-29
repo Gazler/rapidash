@@ -36,6 +36,16 @@ module Rapidash
       def raise_errors
         @raise_error = true
       end
+
+      # How should the request body for POST and PUT requests
+      # be formatted
+      #
+      # key - Symbol. One of :url_encoded (default), :multipart, :json
+      #
+      # Returns String of set format
+      def encode_post_data_with(format = :url_encoded)
+        @encoder ||= format
+      end
     end
 
     # Instance methods
