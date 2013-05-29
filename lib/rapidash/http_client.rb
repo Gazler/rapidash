@@ -35,11 +35,7 @@ module Rapidash
 
     def request(verb, url, options = {})
       url = connection.build_url(normalize_url(url), options[:params]).to_s
-
-      headers = options[:header] || {}
-      headers.merge!('Content-Type' => 'application/json')
-
-      response = connection.run_request(verb, url, options[:body], headers)
+      response = connection.run_request(verb, url, options[:body], options[:header])
 
       response.body
     end
