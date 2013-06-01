@@ -36,7 +36,7 @@ module Rapidash
     private
 
     def client
-      @oauth_client ||= ::OAuth2::Client.new(uid, secret, :site => site) 
+      @oauth_client ||= ::OAuth2::Client.new(uid, secret, :site => site, :connection_build => connection_builder)
     end
 
     def oauth_access_token
