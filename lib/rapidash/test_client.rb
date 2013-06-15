@@ -33,7 +33,7 @@ module Rapidash
     end
 
     def request(verb, url, options = {})
-      connection.send(verb, url, options)
+      connection.send(verb, url, options).body
     end
 
     private

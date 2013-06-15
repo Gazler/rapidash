@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 module Integration
-
   class Repo < Rapidash::Base
   end
 
@@ -14,29 +13,17 @@ module Integration
     method :test
     resource :users
   end
-
 end
-
-gazler = OpenStruct.new({
-  :headers => { "content-type" => "application/json" },
-  :body => { :name => "Gary Rennie" }.to_json
-})
-
-repos = OpenStruct.new({
-  :headers => { "content-type" => "application/json" },
-  :body => [ { :name => "Githug" } ].to_json
-})
 
 responses = {
   :get => {
-    "members/Gazler" => gazler,
-    "members/Gazler/repos" => repos,
+    "members/Gazler" => { :name => "Gary Rennie" }.to_json,
+    "members/Gazler/repos" => [{ :name => "Githug" }].to_json,
   }
 }
 
 describe "An actual Rapidash Client" do
-
-  let!(:client) { Integration::Client.new(:responses => responses) }
+  let(:client) { Integration::Client.new(responses, json: true) }
 
   it "should get the user from the API" do
     client.users!("Gazler").name.should eql("Gary Rennie")

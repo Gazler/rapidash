@@ -23,7 +23,7 @@ describe Rapidash::TestClient do
     let(:response) { client.request(:get, '/foo') }
 
     it "should respond with the correct data" do
-      expect(response.body).to eq 'bar'
+      expect(response).to eq 'bar'
     end
   end
 end
