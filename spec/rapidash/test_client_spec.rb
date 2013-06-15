@@ -1,26 +1,29 @@
 require "spec_helper"
 
-class TestClientTester
+class TesterClient
   include Rapidash::TestClient
 end
 
-describe Rapidash::HTTPClient do
+describe Rapidash::TestClient do
+  let(:responses) do
+    { :get => { "foo" => "bar" } }
+  end
 
-  let!(:responses) { 
-    {
-      :get => {
-        "foo" => "response"
-      }
-    } 
-  }
+  let(:client) { TesterClient.new(responses) }
 
-  let!(:subject) { TestClientTester.new(:responses => responses) }
+  describe ".new" do
+    let(:stubs) { client.stubs }
 
-  describe ".request" do
-    it "should do something" do
-      Rapidash::Response.should_receive(:new).with("response")
-      subject.request(:get, "foo")
+    it "should create Faraday test stubs" do
+      expect(stubs).to be_a Faraday::Adapter::Test::Stubs
     end
   end
 
+  describe "#request" do
+    let(:response) { client.request(:get, '/foo') }
+
+    it "should respond with the correct data" do
+      expect(response).to eq 'bar'
+    end
+  end
 end

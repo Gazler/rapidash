@@ -9,7 +9,7 @@ module Rapidash
     end
 
     class << self
-      attr_accessor :patch, :raise_error
+      attr_accessor :patch, :raise_error, :extension, :encoder
 
       def method(method)
         case method
@@ -35,6 +35,16 @@ module Rapidash
 
       def raise_errors
         @raise_error = true
+      end
+
+      # How should the request body for POST and PUT requests
+      # be formatted
+      #
+      # key - Symbol. One of :url_encoded, :multipart, :json
+      #
+      # Returns String of set format
+      def encode_post_data_with(format)
+        @encoder ||= format
       end
     end
 
@@ -78,6 +88,26 @@ module Rapidash
 
     def delete(url, options = {})
       request(:delete, url, options)
+    end
+
+    private
+
+    def connection_builder
+      lambda do |builder|
+        builder.request self.class.encoder || :url_encoded
+
+        if self.class.respond_to?(:raise_error) && self.class.raise_error
+          builder.use Faraday::Response::RaiseRapidashError
+        end
+
+        builder.use FaradayMiddleware::FollowRedirects
+        builder.use FaradayMiddleware::Mashify
+
+        builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
+        builder.use FaradayMiddleware::ParseXml, :content_type => /\bxml$/
+
+        builder.adapter :net_http
+      end
     end
   end
 end
