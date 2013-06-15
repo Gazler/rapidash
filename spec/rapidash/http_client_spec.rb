@@ -46,18 +46,16 @@ describe Rapidash::HTTPClient do
     end
 
     describe "authorization" do
-      let!(:options) { { :login => "login", :password => "password" } }
-      let!(:subject) { HTTPTester.new(options) }
+      let!(:subject) { HTTPTester.new(:login => "login", :password => "password") }
 
-      it "should authorize with login and password" do
-        subject.connection.should_receive(:basic_auth).with(options[:login], options[:password])
-        subject.connection.stub_chain('app.call').and_return("response")
-        subject.request(:get, "foo")
+      it "should delegate to Faraday's basic auth" do
+        expect(subject.connection.builder.handlers).to include(Faraday::Request::BasicAuthentication)
       end
     end
 
     it "should call response" do
-      subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return("response")
+      response = double(body: "response")
+      subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(response)
       subject.request(:get, "foo")
     end
   end
