@@ -9,7 +9,7 @@ module Rapidash
     end
 
     class << self
-      attr_accessor :patch, :raise_error
+      attr_accessor :patch, :raise_error, :extension, :encoder
 
       def method(method)
         case method
@@ -40,10 +40,10 @@ module Rapidash
       # How should the request body for POST and PUT requests
       # be formatted
       #
-      # key - Symbol. One of :url_encoded (default), :multipart, :json
+      # key - Symbol. One of :url_encoded, :multipart, :json
       #
       # Returns String of set format
-      def encode_post_data_with(format = :url_encoded)
+      def encode_post_data_with(format)
         @encoder ||= format
       end
     end
@@ -94,9 +94,7 @@ module Rapidash
 
     def connection_builder
       lambda do |builder|
-        builder.request self.class.encode_post_data_with
-
-        builder.use Faraday::Request::BasicAuthentication, login, password
+        builder.request self.class.encoder || :url_encoded
 
         if self.class.respond_to?(:raise_error) && self.class.raise_error
           builder.use Faraday::Response::RaiseRapidashError
