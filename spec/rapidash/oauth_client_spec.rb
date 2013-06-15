@@ -11,11 +11,6 @@ class OAuthErrorTester < OAuthTester
 end
 
 describe Rapidash::OAuthClient do
-
-  # before(:each) do
-  #   Rapidash::Response.stub(:new).and_return(Hashie::Mash.new)
-  # end
-
   let(:options) {
     {
       :uid => "foo",
@@ -67,11 +62,9 @@ describe Rapidash::OAuthClient do
   end
 
   describe ".request" do
-
     let(:request) { mock(body: 'data') }
 
     describe "object returned from API call" do
-
       before(:each) do
         subject.stub(:oauth_access_token).and_return(request)
         subject.stub(:normalize_url).with("me").and_return("me")
@@ -81,31 +74,7 @@ describe Rapidash::OAuthClient do
       it "should return a Hashie::Mash" do
         subject.request(:get, "me").should eq 'data'
       end
-
     end
-
-    describe "when errors are set" do
-      it "should call oauth_access_token.send with errors set" do
-        subject = OAuthErrorTester.new(options)
-        subject.stub(:normalize_url).and_return("error")
-        subject.stub_chain(:oauth_access_token, :get).and_return(request)
-        request.should_receive(:get).with("http://example.com/error", {:raise_errors => true})
-        subject.request(:get, "error")
-      end
-
-    end
-
-    describe "when a body is set" do
-      it "should call oauth_access_token.send with errors set" do
-        subject.stub(:normalize_url).and_return("users")
-        subject.stub(:oauth_access_token).and_return(request)
-        request.should_receive(:get).with("http://example.com/users", {:body => {"foo" => "bar"}.to_json, :raise_errors => nil})
-        subject.request(:get, "error", :body => {"foo" => "bar"})
-      end
-
-    end
-
-
   end
 end
 
