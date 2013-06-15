@@ -62,7 +62,7 @@ describe Rapidash::OAuthClient do
   end
 
   describe ".request" do
-    let(:request) { mock(body: 'data') }
+    let(:request) { mock(:body => 'data') }
 
     describe "object returned from API call" do
       before(:each) do

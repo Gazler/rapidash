@@ -23,7 +23,7 @@ responses = {
 }
 
 describe "An actual Rapidash Client" do
-  let(:client) { Integration::Client.new(responses, json: true) }
+  let(:client) { Integration::Client.new(responses, :json => true) }
 
   it "should get the user from the API" do
     client.users!("Gazler").name.should eql("Gary Rennie")

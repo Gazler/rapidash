@@ -6,7 +6,7 @@ end
 
 describe Rapidash::TestClient do
   let(:responses) do
-    { get: { "foo" => "bar" } }
+    { :get => { "foo" => "bar" } }
   end
 
   let(:client) { TesterClient.new(responses) }
