@@ -43,7 +43,7 @@ module Rapidash
       # key - Symbol. One of :url_encoded, :multipart, :json
       #
       # Returns String of set format
-      def encode_post_data_with(format)
+      def encode_request_with(format)
         @encoder ||= format
       end
     end
