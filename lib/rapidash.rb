@@ -1,9 +1,9 @@
 #Required for pluralization and camelcasing
 require "active_support/core_ext/string"
+require "json"
 
 require "rapidash/version"
 
-require "rapidash/response"
 require "faraday/response/raise_rapidash_error"
 require "rapidash/response_error"
 

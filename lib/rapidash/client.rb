@@ -84,7 +84,7 @@ module Rapidash
 
     def connection_builder
       lambda do |builder|
-        builder.request self.class.encoder || :url_encoded
+        builder.request :url_encoded
 
         if self.class.respond_to?(:raise_error) && self.class.raise_error
           builder.use Faraday::Response::RaiseRapidashError
