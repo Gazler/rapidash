@@ -38,9 +38,16 @@ module Rapidash
       end
 
       # How should the request body for POST and PUT requests
-      # be formatted
+      # be formatted.
       #
-      # key - Symbol. One of :url_encoded, :multipart, :json
+      # Examples:
+      #   class Client < Rapidash::Client
+      #     encode_request_with :json
+      #   end
+      #
+      # Arguments:
+      #
+      # format - Symbol. One of :url_encoded, :multipart, :json
       #
       # Returns String of set format
       def encode_request_with(format)
