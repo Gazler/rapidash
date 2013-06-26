@@ -9,7 +9,7 @@ module Rapidash
     end
 
     class << self
-      attr_accessor :patch, :raise_error
+      attr_accessor :patch, :raise_error, :extension, :encoder
 
       def method(method)
         case method
@@ -35,6 +35,16 @@ module Rapidash
 
       def raise_errors
         @raise_error = true
+      end
+
+      # How should the request body for POST and PUT requests
+      # be formatted
+      #
+      # key - Symbol. One of :url_encoded, :multipart, :json
+      #
+      # Returns String of set format
+      def encode_post_data_with(format)
+        @encoder ||= format
       end
     end
 
