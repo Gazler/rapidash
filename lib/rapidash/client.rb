@@ -51,6 +51,12 @@ module Rapidash
       #
       # Returns String of set format
       def encode_request_with(format)
+        format.to_sym!
+
+        unless [:url_encoded, :multipart, :json].include?(format)
+          raise ArgumentError, 'you must pass one of :url_encoded, :multipart or :json to encode_request_with'
+        end
+
         @encoder ||= format
       end
     end
