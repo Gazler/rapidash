@@ -79,5 +79,21 @@ module Rapidash
     def delete(url, options = {})
       request(:delete, url, options)
     end
+
+    private
+
+    def connection_builder
+      lambda do |builder|
+        builder.request self.class.encoder || :url_encoded
+
+        builder.use FaradayMiddleware::FollowRedirects
+        builder.use FaradayMiddleware::Mashify
+
+        builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
+        builder.use FaradayMiddleware::ParseXml, :content_type => /\bxml$/
+
+        builder.adapter :net_http
+      end
+    end
   end
 end

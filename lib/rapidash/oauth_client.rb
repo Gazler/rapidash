@@ -25,7 +25,7 @@ module Rapidash
       options[:raise_errors] = self.class.respond_to?(:raise_error) && self.class.raise_error
       response = oauth_access_token.send(verb.to_sym, "#{site}/#{url}", options)
 
-      Response.new(response)
+      response.body
     end
 
     def access_token_from_code(code, url)
@@ -36,7 +36,7 @@ module Rapidash
     private
 
     def client
-      @oauth_client ||= ::OAuth2::Client.new(uid, secret, :site => site) 
+      @oauth_client ||= ::OAuth2::Client.new(uid, secret, :site => site, :connection_build => connection_builder)
     end
 
     def oauth_access_token
