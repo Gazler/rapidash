@@ -86,6 +86,10 @@ module Rapidash
       lambda do |builder|
         builder.request self.class.encoder || :url_encoded
 
+        if self.class.respond_to?(:raise_error) && self.class.raise_error
+          builder.use Faraday::Response::RaiseRapidashError
+        end
+
         builder.use FaradayMiddleware::FollowRedirects
         builder.use FaradayMiddleware::Mashify
 
