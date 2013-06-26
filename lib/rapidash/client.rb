@@ -84,7 +84,7 @@ module Rapidash
 
     def connection_builder
       lambda do |builder|
-        builder.request self.class.encoder || :url_encoded
+        builder.request :url_encoded
 
         builder.use FaradayMiddleware::FollowRedirects
         builder.use FaradayMiddleware::Mashify
