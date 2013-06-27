@@ -21,6 +21,5 @@ require "rapidash/test_client"
 module Rapidash
   mattr_accessor :response_exception_class
 
-  class ParseError < StandardError; end
   class ConfigurationError < StandardError; end
 end
