@@ -28,6 +28,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday_middleware', '~> 0.9'
   spec.add_dependency "oauth2", "~>0.6"
   spec.add_dependency "hashie", "~>1.2"
-  spec.add_dependency "activesupport", ">= 3.0.0"
 
+  if RUBY_VERSION < "1.9.3"
+    spec.add_dependency "activesupport", "~> 3.0.0"
+  else
+    spec.add_dependency "activesupport", ">= 3.0.0"
+  end
 end
