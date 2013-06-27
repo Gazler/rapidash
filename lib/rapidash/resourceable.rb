@@ -71,9 +71,13 @@ module Rapidash
         method = options[:method] || :get
 
         define_method("#{name}!") do
+          original_url = @url
+
           @url += "/#{path}"
           @options[:method] = method
           call!
+
+          @url = original_url
         end
       end
     end
