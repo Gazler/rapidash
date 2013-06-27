@@ -94,6 +94,20 @@ describe Rapidash::Client do
     end
   end
 
+  describe ".encode_request_with" do
+    let(:klass) { test_client.class }
+
+    it "should set encoder for valid argument" do
+      klass.encode_request_with(:json)
+      expect(klass.encoder).to eq :json
+    end
+
+    it "should raise exception for invalid argument" do
+      expect {
+        klass.encode_request_with(:wibble)
+      }.to raise_exception(ArgumentError)
+    end
+  end
 
   describe ".get" do
     it "should call request" do
