@@ -1,23 +1,24 @@
 require 'spec_helper'
+module CollectionTest; end
 
-class User < Rapidash::Base
+class CollectionTest::User < Rapidash::Base
   collection :active
 end
 
-class People < Rapidash::Base
+class CollectionTest::Person < Rapidash::Base
   collection :suspend_all, :path => 'deactivate', :method => :post
 end
 
-class Client < Rapidash::Client
+class CollectionTest::Client < Rapidash::Client
   method :http
   site 'http://acme.com'
 
-  resource :users
-  resource :people
+  resource :users, :class_name => "CollectionTest::User"
+  resource :people, :class_name => "CollectionTest::Person"
 end
 
 describe Rapidash::Client do
-  let(:client) { Client.new }
+  let(:client) { CollectionTest::Client.new }
 
   context "standand collection" do
     let(:resource) { client.users }

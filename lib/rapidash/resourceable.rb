@@ -64,20 +64,22 @@ module Rapidash
         end
       end
 
-      def collection(name, options = {})
-        path = options[:path] || name.to_s
+      def collection(name, attrs = {})
+        path = attrs[:path] || name.to_s
         path.gsub!(/^\//, '')
 
-        method = options[:method] || :get
+        method = attrs[:method] || :get
 
         define_method("#{name}!") do
           original_url = @url
 
           @url += "/#{path}"
           @options[:method] = method
-          call!
+          result = call!
 
           @url = original_url
+
+          result
         end
       end
     end
