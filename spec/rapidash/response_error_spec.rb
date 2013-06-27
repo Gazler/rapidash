@@ -42,7 +42,7 @@ describe Rapidash::ResponseError do
     let(:env) { { :status => '404', :method => 'post', :url => 'http://acme.com/api/posts', :body => ['name cannot be blank', 'content cannot be blank'] } }
 
     it "should call #errors" do
-      expect(response).to receive(:errors)
+      response.should_receive(:errors)
       response.send(:message)
     end
 
