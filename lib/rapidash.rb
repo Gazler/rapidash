@@ -18,7 +18,15 @@ require "rapidash/oauth_client"
 require "rapidash/test_client"
 
 module Rapidash
-  mattr_accessor :response_exception_class
+  def self.response_exception_class=(obj)
+    @@response_exception_class = obj
+  end
+
+  def self.response_exception_class
+    @@response_exception_class = nil unless defined? @@response_exception_class
+
+    @@response_exception_class
+  end
 
   class ParseError < StandardError; end
   class ConfigurationError < StandardError; end
