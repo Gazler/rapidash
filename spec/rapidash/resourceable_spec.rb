@@ -55,16 +55,12 @@ describe Rapidash::Resourceable do
     it "should include the resource method" do
       Rapidash::ClientTester.methods.map { |m| m.to_sym }.should include(:resource)
     end
-
   end
-
 
   describe "instance methods" do
     let(:client) { ClientTester.new }
 
     describe ".resource" do
-
-
       it "should create a Rapidash::Base" do
         client.resource(:users, 1).class.should eql(Rapidash::Base)
       end

@@ -76,19 +76,6 @@ module Rapidash
           call!
         end
       end
-
-      def member(name, options = {})
-        path = options[:path] || name.to_s
-        path.gsub!(/^\//, '')
-
-        method = options[:method] || :get
-
-        define_method("#{name}!") do |id|
-          @url += "/#{id}/#{path}"
-          @options[:method] = method
-          call!
-        end
-      end
     end
   end
 end
