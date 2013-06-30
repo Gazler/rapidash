@@ -53,6 +53,14 @@ describe Rapidash::HTTPClient do
       end
     end
 
+    describe "without authorization" do
+      let!(:subject) { HTTPTester.new() }
+
+      it "should delegate to Faraday's basic auth" do
+        expect(subject.connection.builder.handlers).to_not include(Faraday::Request::BasicAuthentication)
+      end
+    end
+
     it "should call response" do
       response = double(:body => "response")
       subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(response)
