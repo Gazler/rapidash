@@ -9,7 +9,7 @@ module Rapidash
     end
 
     class << self
-      attr_accessor :patch, :raise_error
+      attr_accessor :patch, :raise_error, :extension, :encoder
 
       def method(method)
         case method
@@ -35,6 +35,32 @@ module Rapidash
 
       def raise_errors
         @raise_error = true
+      end
+
+      # How should the request body for POST and PUT requests
+      # be formatted.
+      #
+      # Examples:
+      #   class Client < Rapidash::Client
+      #     encode_request_with :json
+      #   end
+      #
+      # Arguments:
+      #
+      # format - Symbol. One of :url_encoded, :multipart, :json
+      #
+      # Returns String of set format
+      def encode_request_with(format)
+        format = format.to_s.to_sym
+
+        unless [:url_encoded, :multipart, :json].include?(format)
+          raise ArgumentError, 'you must pass one of :url_encoded, :multipart or :json to encode_request_with'
+        end
+
+        # Map json to multi_json to make it consistent with MutiJson parsing of responses
+        format = :multi_json if format == :json
+
+        @encoder ||= format
       end
     end
 
@@ -78,6 +104,26 @@ module Rapidash
 
     def delete(url, options = {})
       request(:delete, url, options)
+    end
+
+    private
+
+    def connection_builder
+      lambda do |builder|
+        builder.request self.class.encoder || :url_encoded
+
+        if self.class.respond_to?(:raise_error) && self.class.raise_error
+          builder.use Faraday::Response::RaiseRapidashError
+        end
+
+        builder.use FaradayMiddleware::FollowRedirects
+        builder.use FaradayMiddleware::Mashify
+
+        builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
+        builder.use FaradayMiddleware::ParseXml, :content_type => /\bxml$/
+
+        builder.adapter :net_http
+      end
     end
   end
 end

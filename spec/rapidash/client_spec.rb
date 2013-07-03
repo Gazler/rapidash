@@ -1,10 +1,5 @@
 require 'spec_helper'
 
-class Client < Rapidash::Client
-  method :test
-end
-
-
 class OAuthClientTester < Rapidash::Client
   method :oauth
 end
@@ -25,13 +20,13 @@ class HTTPClientErrorTester < HTTPClientTester
   raise_errors
 end
 
-class TestClientTester
+class TestClientTester < Rapidash::Client
   method :test
 end
 
 describe Rapidash::Client do
 
-  let!(:subject) { Client.new }
+  let(:test_client) { TestClientTester.new({}) }
 
   describe "#method" do
     it "should include the HTTPClient" do
@@ -45,8 +40,7 @@ describe Rapidash::Client do
     end
 
     it "should include the OAuthClient" do
-      client = TestClientTester.new
-      client.class.ancestors.should include(Rapidash::TestClient)
+      test_client.class.ancestors.should include(Rapidash::TestClient)
     end
 
     it "should raise an error on anything else" do
@@ -85,61 +79,75 @@ describe Rapidash::Client do
 
   describe ".site=" do
     it "should clear the connection variable after set new site" do
-      subject.instance_variable_get(:@connection).should eql(nil)
-      subject.site = "foo"
-      subject.instance_variable_set(:@connection, "Not nil")
+      test_client.instance_variable_get(:@connection).should eql(nil)
+      test_client.site = "foo"
+      test_client.instance_variable_set(:@connection, "Not nil")
 
-      subject.site = "bar"
-      subject.instance_variable_get(:@connection).should eql(nil)
+      test_client.site = "bar"
+      test_client.instance_variable_get(:@connection).should eql(nil)
     end
 
     it "should set the site variable" do
-      subject.instance_variable_get(:@site).should eql(nil)
-      subject.site = "foo"
-      subject.instance_variable_get(:@site).should eql("foo")
+      test_client.instance_variable_get(:@site).should eql(nil)
+      test_client.site = "foo"
+      test_client.instance_variable_get(:@site).should eql("foo")
     end
   end
 
+  describe ".encode_request_with" do
+    let(:klass) { test_client.class }
+
+    it "should set encoder for valid argument" do
+      klass.encode_request_with(:json)
+      expect(klass.encoder).to eq :json
+    end
+
+    it "should raise exception for invalid argument" do
+      expect {
+        klass.encode_request_with(:wibble)
+      }.to raise_exception(ArgumentError)
+    end
+  end
 
   describe ".get" do
     it "should call request" do
-      subject.should_receive(:request).with(:get, "foo", {})
-      subject.get("foo")
+      test_client.should_receive(:request).with(:get, "foo", {})
+      test_client.get("foo")
     end
   end
 
   describe ".post" do
     it "should call request" do
-      subject.should_receive(:request).with(:post, "foo", {})
-      subject.post("foo")
+      test_client.should_receive(:request).with(:post, "foo", {})
+      test_client.post("foo")
     end
   end
 
   describe ".put" do
     it "should call request" do
-      subject.should_receive(:request).with(:put, "foo", {})
-      subject.put("foo")
+      test_client.should_receive(:request).with(:put, "foo", {})
+      test_client.put("foo")
     end
   end
 
   describe ".patch" do
     it "should call request" do
-      subject.should_receive(:request).with(:patch, "foo", {})
-      subject.patch("foo")
+      test_client.should_receive(:request).with(:patch, "foo", {})
+      test_client.patch("foo")
     end
   end
 
   describe ".delete" do
     it "should call request" do
-      subject.should_receive(:request).with(:delete, "foo", {})
-      subject.delete("foo")
+      test_client.should_receive(:request).with(:delete, "foo", {})
+      test_client.delete("foo")
     end
   end
 
   describe ".normalize_url" do
     it "should use the instance extension if set" do
-      subject.extension = :json
-      subject.normalize_url("users").should eql("users.json")
+      test_client.extension = :json
+      test_client.normalize_url("users").should eql("users.json")
     end
 
     it "should use the class extension if set" do
@@ -147,7 +155,7 @@ describe Rapidash::Client do
     end
 
     it "should return the url if no extension if set" do
-      subject.normalize_url("users").should eql("users")
+      test_client.normalize_url("users").should eql("users")
     end
   end
 end
