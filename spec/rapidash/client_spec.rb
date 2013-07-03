@@ -99,7 +99,7 @@ describe Rapidash::Client do
 
     it "should set encoder for valid argument" do
       klass.encode_request_with(:json)
-      expect(klass.encoder).to eq :json
+      expect(klass.encoder).to eq :multi_json
     end
 
     it "should raise exception for invalid argument" do
