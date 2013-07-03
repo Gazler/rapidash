@@ -1,7 +1,7 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rapidash/version'
+require "rapidash/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "rapidash"
@@ -22,10 +22,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 2.8"
   spec.add_development_dependency "simplecov", "~> 0.7"
+  spec.add_development_dependency "json"
 
-  spec.add_dependency 'json'
-  spec.add_dependency 'faraday', '~> 0.8'
-  spec.add_dependency 'faraday_middleware', '~> 0.9'
+  spec.add_dependency "faraday", "~> 0.8"
+  spec.add_dependency "faraday_middleware", "~> 0.9"
+  spec.add_dependency "faraday_middleware-multi_json", "~> 0.0"
   spec.add_dependency "oauth2", "~>0.6"
   spec.add_dependency "hashie", "~>1.2"
   if RUBY_VERSION < "1.9.3"

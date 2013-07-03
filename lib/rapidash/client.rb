@@ -116,7 +116,7 @@ module Rapidash
         builder.use FaradayMiddleware::FollowRedirects
         builder.use FaradayMiddleware::Mashify
 
-        builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
+        builder.use FaradayMiddleware::MultiJson::ParseJson, :content_type => /\bjson$/
         builder.use FaradayMiddleware::ParseXml, :content_type => /\bxml$/
 
         builder.adapter :net_http
