@@ -57,6 +57,9 @@ module Rapidash
           raise ArgumentError, 'you must pass one of :url_encoded, :multipart or :json to encode_request_with'
         end
 
+        # Map json to multi_json to make it consistent with MutiJson parsing of responses
+        format = :multi_json if format == :json
+
         @encoder ||= format
       end
     end
