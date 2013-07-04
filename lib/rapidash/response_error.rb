@@ -55,12 +55,10 @@ module Rapidash
       @method = response[:method].to_s.upcase
       @url = response[:url]
 
-      super(message)
+      super
     end
 
-    private
-
-    def message
+    def to_s
       msg = "#{status} #{method} #{url}"
 
       if respond_to?(:errors) && !(errors.blank?)
