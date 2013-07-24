@@ -180,6 +180,7 @@ p client.me!.first_name #Gary
 require 'rapidash'
 
 class Repo < Rapidash::Base
+end
 
 class User < Rapidash::Base
   resource :repos
