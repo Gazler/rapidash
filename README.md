@@ -93,6 +93,29 @@ class AnotherResource < Rapidash::Base
 end
 ```
 
+
+### Collections
+
+The collection method allows you to add methods to a resource.
+
+```ruby
+class Project < Rapidash::Base
+  collection :archived
+end
+
+# creates the method below which performs a
+# GET /projects/archived
+client.projects.archived!
+
+class Project < Rapidash::Base
+  collection :delete_all, path: 'destroy', method: :post
+end
+
+# creates the method below which performs a
+# POST /projects/destroy
+client.projects.delete_all!
+```
+
 ### Client
 
 The main thing a client must do is define a method, `oauth` and `http` are currently supported.  You can also define resources which links a resource as defined above to the client.
