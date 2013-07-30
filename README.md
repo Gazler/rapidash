@@ -1,4 +1,4 @@
-# Rapidash [![Build Status](https://travis-ci.org/Gazler/rapidash.png?branch=master)](https://travis-ci.org/Gazler/rapidash)
+# Rapidash [![Build Status](https://travis-ci.org/Gazler/rapidash.png?branch=master)](https://travis-ci.org/Gazler/rapidash) [![Coverage Status](https://coveralls.io/repos/Gazler/rapidash/badge.png?branch=master)](https://coveralls.io/r/Gazler/rapidash?branch=master)
 
 ![Rapidash](http://rapidashgem.com/images/rapidash.png)
 
