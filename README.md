@@ -1,7 +1,5 @@
 # Rapidash [![Build Status](https://travis-ci.org/Gazler/rapidash.png?branch=master)](https://travis-ci.org/Gazler/rapidash) [![Coverage Status](https://coveralls.io/repos/Gazler/rapidash/badge.png?branch=master)](https://coveralls.io/r/Gazler/rapidash?branch=master)
 
-![Rapidash](http://rapidashgem.com/images/rapidash.png)
-
 Rapidash is a core for you to build a client for your API on.  The goal is to define a standard way that developers can quickly write a client for the consumption of their RESTful API.
 
 ## Installation
