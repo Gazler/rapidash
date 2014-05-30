@@ -219,7 +219,3 @@ client = Client.new({
 4. Write your tests, start and check coverage: open file coverage/index.html in your browser. Must be 100.0% covered
 5. Push to the branch (`git push origin my-new-feature`)
 6. Create new Pull Request (into the development branch)
-
-## Credits
-
-Thanks to [@Sid3show](https://github.com/Sid3show) for the sweet logo!
