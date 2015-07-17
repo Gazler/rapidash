@@ -7,7 +7,7 @@ describe Faraday::Response::RaiseRapidashError do
     it "should not raise an exception" do
       expect {
         subject.on_complete(env)
-      }.to_not raise_exception(Rapidash::ResponseError)
+      }.to_not raise_exception
     end
   end
 

@@ -18,7 +18,7 @@ end
 
 describe Rapidash::Urlable do
 
-  let!(:client) { mock }
+  let!(:client) { double }
 
   describe "#included" do
     it "should add the url method" do

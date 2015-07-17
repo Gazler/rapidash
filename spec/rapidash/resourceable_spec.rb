@@ -102,7 +102,7 @@ describe Rapidash::Resourceable do
 
     describe ".resource!" do
       it "should call the call! method on a resource" do
-        resource = mock
+        resource = double
         Rapidash::Base.stub(:new).and_return(resource)
         resource.should_receive(:call!)
         client.resource!(:users, 1)
@@ -120,7 +120,7 @@ describe Rapidash::Resourceable do
         class ClientTester
           resource :admin_users
         end
-      }.to_not raise_error(NameError)
+      }.to_not raise_error
     end
 
     it "should load the plural class with a warning if the singular is not defined" do
@@ -152,7 +152,7 @@ describe Rapidash::Resourceable do
 
   describe ".tickets!" do
     it "should return an instance of the resource and call it" do
-      users = mock
+      users = double
       Rapidash::User.should_receive(:new).and_return(users)
       users.should_receive(:call!)
       Rapidash::ClientTester.new.users!
@@ -161,26 +161,26 @@ describe Rapidash::Resourceable do
 
   describe "chaining resources" do
     it "should allow resources to be nested" do
-      client = mock
+      client = double
       users = Rapidash::User.new(client)
       users.methods.map { |m| m.to_sym }.should include(:repos)
       users.methods.map { |m| m.to_sym }.should include(:repos!)
     end
 
     it "should maintain the client across resources " do
-      client = mock
+      client = double
       users = Rapidash::User.new(client)
       users.repos.instance_variable_get(:@client).should eql(client)
     end
 
     it "should maintain the URL when chaining" do
-      client = mock
+      client = double
       users = Rapidash::User.new(client)
       users.repos.instance_variable_get(:@args)[0].keys.should include(:previous_url)
     end
 
     it "should maintain the URL as well as the options when chaining" do
-      client = mock
+      client = double
       users = Rapidash::User.new(client)
       repos = users.repos(:params => {:foo => :bar})
       repos.instance_variable_get(:@args)[0].should include(:params)
@@ -248,7 +248,7 @@ describe Rapidash::Resourceable do
             end
           end
         end
-      }.to_not raise_error(NameError)
+      }.to_not raise_error
     end
 
   end

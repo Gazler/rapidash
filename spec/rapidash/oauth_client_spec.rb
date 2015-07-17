@@ -27,7 +27,7 @@ describe Rapidash::OAuthClient do
     it "should not raise an error with the correct options" do
       expect {
         OAuthTester.new(options)
-      }.to_not raise_error(Rapidash::ConfigurationError)
+      }.to_not raise_error
     end
 
     it "should raise an error if the correct options are not set" do
@@ -40,8 +40,8 @@ describe Rapidash::OAuthClient do
 
  describe ".access_token_from_code" do
     it "should call localhost for the access token" do
-      auth_code = mock
-      client = mock
+      auth_code = double
+      client = double
       subject.stub(:client).and_return(client)
       client.should_receive(:auth_code).and_return(auth_code)
       auth_code.should_receive(:get_token).with("123", :redirect_uri => "http://localhost").and_return(OpenStruct.new(:token => "token"))
@@ -62,7 +62,7 @@ describe Rapidash::OAuthClient do
   end
 
   describe ".request" do
-    let(:request) { mock(:body => 'data') }
+    let(:request) { double(:body => 'data') }
 
     describe "object returned from API call" do
       before(:each) do

@@ -24,16 +24,16 @@ Gem::Specification.new do |spec|
   else
     spec.add_dependency "activesupport", ">= 3.0.0"
   end
-  spec.add_development_dependency "bundler", "~> 1.0"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 2.8"
-  spec.add_development_dependency "simplecov", "~> 0.7"
+  spec.add_development_dependency "rspec" 
+  spec.add_development_dependency "simplecov"
   spec.add_development_dependency "json"
   spec.add_development_dependency "coveralls"
 
-  spec.add_dependency "faraday", "~> 0.8"
-  spec.add_dependency "faraday_middleware", "~> 0.9"
-  spec.add_dependency "faraday_middleware-multi_json", "~> 0.0"
-  spec.add_dependency "oauth2", "~>0.6"
-  spec.add_dependency "hashie", "~>1.2"
+  spec.add_dependency "faraday"
+  spec.add_dependency "faraday_middleware"
+  spec.add_dependency "faraday_middleware-multi_json"
+  spec.add_dependency "oauth2"
+  spec.add_dependency "hashie"
 end
