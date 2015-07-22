@@ -122,6 +122,13 @@ describe Rapidash::Base do
       subject.call!
     end
 
+    it "should set extra headers on the client" do
+      user_agent_header = {header: { user_agent: 'My own Faraday version'}}
+      subject = BaseTester.new(client,user_agent_header)
+      subject.url = "tester/1"
+      allow(client).to receive(:get).with("tester/1", {:headers => headers}.merge(user_agent_header) )
+      subject.call!
+    end
 
     it "should call a post on the client if set" do
       allow(client).to receive(:post).with("tester", {:headers => headers})
