@@ -19,6 +19,7 @@ end
 describe Rapidash::Urlable do
 
   let!(:client) { double }
+  let(:custom_header) { { :header => { user_agent: 'Experimentation v3.14'} } }
 
   describe "#included" do
     it "should add the url method" do
@@ -35,6 +36,12 @@ describe Rapidash::Urlable do
     it "should set options on the class" do
       api = ApiTester.new(client, :option1 => "foo")
       expect(api.instance_variable_get(:@options)).to eql({:option1 => "foo"})
+      expect(api.instance_variable_get(:@url)).to eql("foo")
+    end
+
+    it "should allow custom headers" do
+      api = ApiTester.new(client,custom_header)
+      expect(api.instance_variable_get(:@options)).to eql(custom_header)
       expect(api.instance_variable_get(:@url)).to eql("foo")
     end
 
