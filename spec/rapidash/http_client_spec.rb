@@ -23,7 +23,7 @@ describe Rapidash::HTTPClient do
   describe ".connection" do
     it "should create a Faraday object" do
       subject.site = "http://example.com/"
-      subject.connection.class.should eql(Faraday::Connection)
+      expect(subject.connection.class).to eql(Faraday::Connection)
     end
 
     it "should raise Configuration error if site nil" do

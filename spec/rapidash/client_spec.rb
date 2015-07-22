@@ -31,16 +31,16 @@ describe Rapidash::Client do
   describe "#method" do
     it "should include the HTTPClient" do
       client = HTTPClientTester.new
-      client.class.ancestors.should include(Rapidash::HTTPClient)
+      expect(client.class.ancestors).to include(Rapidash::HTTPClient)
     end
 
     it "should include the OAuthClient" do
       client = OAuthClientTester.new({:uid => "foo", :secret => "bar", :site => "baz"})
-      client.class.ancestors.should include(Rapidash::OAuthClient)
+      expect(client.class.ancestors).to include(Rapidash::OAuthClient)
     end
 
     it "should include the OAuthClient" do
-      test_client.class.ancestors.should include(Rapidash::TestClient)
+      expect(test_client.class.ancestors).to include(Rapidash::TestClient)
     end
 
     it "should raise an error on anything else" do
@@ -54,19 +54,19 @@ describe Rapidash::Client do
 
   describe "#use_patch" do
     it "should set the patch variable to true" do
-      HTTPClientPatchTester.new.class.instance_variable_get(:@patch).should eql(true)
+      expect(HTTPClientPatchTester.new.class.instance_variable_get(:@patch)).to eql(true)
     end
   end
 
   describe "#extension" do
     it "should set the url_extension variable" do
-      HTTPClientExtensionTester.new.class.instance_variable_get(:@extension).should eql(:js)
+      expect(HTTPClientExtensionTester.new.class.instance_variable_get(:@extension)).to eql(:js)
     end
   end
 
   describe "#raise_errors" do
     it "should set the raise_error variable" do
-      HTTPClientErrorTester.new.class.instance_variable_get(:@raise_error).should eql(true)
+      expect(HTTPClientErrorTester.new.class.instance_variable_get(:@raise_error)).to eql(true)
     end
   end
 
@@ -79,18 +79,18 @@ describe Rapidash::Client do
 
   describe ".site=" do
     it "should clear the connection variable after set new site" do
-      test_client.instance_variable_get(:@connection).should eql(nil)
+      expect(test_client.instance_variable_get(:@connection)).to eql(nil)
       test_client.site = "foo"
       test_client.instance_variable_set(:@connection, "Not nil")
 
       test_client.site = "bar"
-      test_client.instance_variable_get(:@connection).should eql(nil)
+      expect(test_client.instance_variable_get(:@connection)).to eql(nil)
     end
 
     it "should set the site variable" do
-      test_client.instance_variable_get(:@site).should eql(nil)
+      expect(test_client.instance_variable_get(:@site)).to eql(nil)
       test_client.site = "foo"
-      test_client.instance_variable_get(:@site).should eql("foo")
+      expect(test_client.instance_variable_get(:@site)).to eql("foo")
     end
   end
 
@@ -147,15 +147,15 @@ describe Rapidash::Client do
   describe ".normalize_url" do
     it "should use the instance extension if set" do
       test_client.extension = :json
-      test_client.normalize_url("users").should eql("users.json")
+      expect(test_client.normalize_url("users")).to eql("users.json")
     end
 
     it "should use the class extension if set" do
-      HTTPClientExtensionTester.new.normalize_url("users").should eql("users.js")
+      expect(HTTPClientExtensionTester.new.normalize_url("users")).to eql("users.js")
     end
 
     it "should return the url if no extension if set" do
-      test_client.normalize_url("users").should eql("users")
+      expect(test_client.normalize_url("users")).to eql("users")
     end
   end
 end
