@@ -26,15 +26,15 @@ describe Rapidash::Base do
   describe ".initialize" do
 
     it "should assume a default based on the class name" do
-      Base.new.instance_variable_get(:@url).should eql("bases")
+      expect(Base.new.instance_variable_get(:@url)).to eql("bases")
     end
 
     it "should ignore any modules when infering the URL" do
-      Rapidash::Resource.new.instance_variable_get(:@url).should eql("resources")
+      expect(Rapidash::Resource.new.instance_variable_get(:@url)).to eql("resources")
     end
 
     it "should override the URL if set" do
-        BaseTester.new.instance_variable_get(:@url).should eql("tester")
+        expect(BaseTester.new.instance_variable_get(:@url)).to eql("tester")
     end
   end
 
@@ -56,9 +56,9 @@ describe Rapidash::Base do
 
   describe ".create!" do
     it "should set the method to post and set the body" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.create!(post)
-      subject.instance_variable_get(:@options).should eql({
+      expect(subject.instance_variable_get(:@options)).to eql({
         :method => :post,
         :body => post
       })
@@ -66,9 +66,9 @@ describe Rapidash::Base do
 
     it "should use the root element if one is defined" do
       subject = RootTester.new
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.create!(no_root)
-      subject.instance_variable_get(:@options).should eql({
+      expect(subject.instance_variable_get(:@options)).to eql({
         :method => :post,
         :body => post
       })
@@ -77,9 +77,9 @@ describe Rapidash::Base do
 
   describe ".update!" do
     it "should set the method to put and set the body" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(post)
-      subject.instance_variable_get(:@options).should eql({
+      expect(subject.instance_variable_get(:@options)).to eql({
         :method => :put,
         :body => post
       })
@@ -87,9 +87,9 @@ describe Rapidash::Base do
 
     it "should use the patch verb if set on the client" do
       client.class.patch = true
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(post)
-      subject.instance_variable_get(:@options).should eql({
+      expect(subject.instance_variable_get(:@options)).to eql({
         :method => :patch,
         :body => post
       })
@@ -97,9 +97,9 @@ describe Rapidash::Base do
 
     it "should use the root element if one is defined" do
       subject = RootTester.new(client)
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(no_root)
-      subject.instance_variable_get(:@options).should eql({
+      expect(subject.instance_variable_get(:@options)).to eql({
         :method => :patch,
         :body => post
       })
@@ -108,9 +108,9 @@ describe Rapidash::Base do
 
   describe ".delete!" do
     it "should set the method to delete" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.delete!
-      subject.instance_variable_get(:@options).should eql({:method => :delete})
+      expect(subject.instance_variable_get(:@options)).to eql({:method => :delete})
     end
     
   end
@@ -118,13 +118,13 @@ describe Rapidash::Base do
   describe ".call!" do
     it "should call get on the client" do
       subject.url = "tester/1"
-      client.should_receive(:get).with("tester/1", {:headers => headers})
+      allow(client).to receive(:get).with("tester/1", {:headers => headers})
       subject.call!
     end
 
 
     it "should call a post on the client if set" do
-      client.should_receive(:post).with("tester", {:headers => headers})
+      allow(client).to receive(:post).with("tester", {:headers => headers})
       subject.options = {:method => :post}
       subject.url = "tester"
       subject.call!
@@ -133,23 +133,23 @@ describe Rapidash::Base do
 
   describe ".base_url" do
     it "should return an empty string if no previous url is set" do
-      subject.send(:base_url).should eql("")
+      expect(subject.send(:base_url)).to eql("")
     end
 
     it "should return the previous url if set" do
       subject.options = {:previous_url => "users/Gazler"}
-      subject.send(:base_url).should eql("users/Gazler/")
+      expect(subject.send(:base_url)).to eql("users/Gazler/")
     end
   end
 
   describe ".resource_url" do
     it "should return the class name as a url if none is specified" do
-      subject.send(:resource_url).should eql("basetesters")
+      expect(subject.send(:resource_url)).to eql("basetesters")
     end
 
     it "should return the previous url if set" do
       subject.options = {:url => "people"}
-      subject.send(:resource_url).should eql("people")
+      expect(subject.send(:resource_url)).to eql("people")
     end
   end
 

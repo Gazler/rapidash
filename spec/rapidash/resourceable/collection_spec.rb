@@ -28,7 +28,7 @@ describe Rapidash::Client do
     end
 
     it "should call with the updated URL" do
-      client.should_receive(:get).with('users/active', { :headers => { "content-type" => "application/json" }})
+      expect(client).to receive(:get).with('users/active', { :headers => { "content-type" => "application/json" }})
       resource.active!
     end
 
@@ -46,7 +46,7 @@ describe Rapidash::Client do
     end
 
     it "should call with the updated URL" do
-      client.should_receive(:post).with('people/deactivate', { :headers => { "content-type" => "application/json" }})
+      expect(client).to receive(:post).with('people/deactivate', { :headers => { "content-type" => "application/json" }})
       resource.suspend_all!
     end
 

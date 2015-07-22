@@ -27,7 +27,7 @@ describe Rapidash::OAuthClient do
     it "should not raise an error with the correct options" do
       expect {
         OAuthTester.new(options)
-      }.to_not raise_error(Rapidash::ConfigurationError)
+      }.to_not raise_error
     end
 
     it "should raise an error if the correct options are not set" do
@@ -40,39 +40,39 @@ describe Rapidash::OAuthClient do
 
  describe ".access_token_from_code" do
     it "should call localhost for the access token" do
-      auth_code = mock
-      client = mock
-      subject.stub(:client).and_return(client)
-      client.should_receive(:auth_code).and_return(auth_code)
-      auth_code.should_receive(:get_token).with("123", :redirect_uri => "http://localhost").and_return(OpenStruct.new(:token => "token"))
-      subject.access_token_from_code("123", "http://localhost").should eql("token")
+      auth_code = double
+      client = double
+      allow(subject).to receive(:client).and_return(client)
+      expect(client).to receive(:auth_code).and_return(auth_code)
+      expect(auth_code).to receive(:get_token).with("123", :redirect_uri => "http://localhost").and_return(OpenStruct.new(:token => "token"))
+      expect(subject.access_token_from_code("123", "http://localhost")).to eql("token")
     end
   end
 
   describe ".client" do
     it "should be an OAuth2::Client" do
-      subject.send(:client).class.should eql(OAuth2::Client)
+      expect(subject.send(:client).class).to eql(OAuth2::Client)
     end
   end
 
   describe ".oauth_access_token" do
     it "should be an OAuth2::AccessToken" do
-      subject.send(:oauth_access_token).class.should eql(OAuth2::AccessToken)
+      expect(subject.send(:oauth_access_token).class).to eql(OAuth2::AccessToken)
     end
   end
 
   describe ".request" do
-    let(:request) { mock(:body => 'data') }
+    let(:request) { double(:body => 'data') }
 
     describe "object returned from API call" do
       before(:each) do
-        subject.stub(:oauth_access_token).and_return(request)
-        subject.stub(:normalize_url).with("me").and_return("me")
-        request.stub(:get) { request }
+        allow(subject).to receive(:oauth_access_token).and_return(request)
+        allow(subject).to receive(:normalize_url).with("me").and_return("me")
+        allow(request).to receive(:get) { request }
       end
 
       it "should return a Hashie::Mash" do
-        subject.request(:get, "me").should eq 'data'
+        expect(subject.request(:get, "me")).to eq 'data'
       end
     end
   end
