@@ -111,35 +111,35 @@ describe Rapidash::Client do
 
   describe ".get" do
     it "should call request" do
-      test_client.should_receive(:request).with(:get, "foo", {})
+      allow(test_client).to receive(:request).with(:get, "foo", {})
       test_client.get("foo")
     end
   end
 
   describe ".post" do
     it "should call request" do
-      test_client.should_receive(:request).with(:post, "foo", {})
+      allow(test_client).to receive(:request).with(:post, "foo", {})
       test_client.post("foo")
     end
   end
 
   describe ".put" do
     it "should call request" do
-      test_client.should_receive(:request).with(:put, "foo", {})
+      allow(test_client).to receive(:request).with(:put, "foo", {})
       test_client.put("foo")
     end
   end
 
   describe ".patch" do
     it "should call request" do
-      test_client.should_receive(:request).with(:patch, "foo", {})
+      allow(test_client).to receive(:request).with(:patch, "foo", {})
       test_client.patch("foo")
     end
   end
 
   describe ".delete" do
     it "should call request" do
-      test_client.should_receive(:request).with(:delete, "foo", {})
+      allow(test_client).to receive(:request).with(:delete, "foo", {})
       test_client.delete("foo")
     end
   end

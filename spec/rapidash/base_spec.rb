@@ -56,7 +56,7 @@ describe Rapidash::Base do
 
   describe ".create!" do
     it "should set the method to post and set the body" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.create!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :post,
@@ -66,7 +66,7 @@ describe Rapidash::Base do
 
     it "should use the root element if one is defined" do
       subject = RootTester.new
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.create!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :post,
@@ -77,7 +77,7 @@ describe Rapidash::Base do
 
   describe ".update!" do
     it "should set the method to put and set the body" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :put,
@@ -87,7 +87,7 @@ describe Rapidash::Base do
 
     it "should use the patch verb if set on the client" do
       client.class.patch = true
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(post)
       subject.instance_variable_get(:@options).should eql({
         :method => :patch,
@@ -97,7 +97,7 @@ describe Rapidash::Base do
 
     it "should use the root element if one is defined" do
       subject = RootTester.new(client)
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.update!(no_root)
       subject.instance_variable_get(:@options).should eql({
         :method => :patch,
@@ -108,7 +108,7 @@ describe Rapidash::Base do
 
   describe ".delete!" do
     it "should set the method to delete" do
-      subject.should_receive(:call!)
+      allow(subject).to receive(:call!)
       subject.delete!
       subject.instance_variable_get(:@options).should eql({:method => :delete})
     end
@@ -118,13 +118,13 @@ describe Rapidash::Base do
   describe ".call!" do
     it "should call get on the client" do
       subject.url = "tester/1"
-      client.should_receive(:get).with("tester/1", {:headers => headers})
+      allow(client).to receive(:get).with("tester/1", {:headers => headers})
       subject.call!
     end
 
 
     it "should call a post on the client if set" do
-      client.should_receive(:post).with("tester", {:headers => headers})
+      allow(client).to receive(:post).with("tester", {:headers => headers})
       subject.options = {:method => :post}
       subject.url = "tester"
       subject.call!

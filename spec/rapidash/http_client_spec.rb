@@ -33,7 +33,7 @@ describe Rapidash::HTTPClient do
     end
 
     it "should use the site variable if set" do
-      Faraday.should_receive(:new).with("http://example.com/")
+      allow(Faraday).to receive(:new).with("http://example.com/")
       subject.site = "http://example.com/"
       subject.connection
     end
@@ -63,7 +63,7 @@ describe Rapidash::HTTPClient do
 
     it "should call response" do
       response = double(:body => "response")
-      subject.connection.should_receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(response)
+      allow(subject.connection).to receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(response)
       subject.request(:get, "foo")
     end
   end
