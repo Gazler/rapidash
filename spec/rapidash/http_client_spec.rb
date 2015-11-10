@@ -67,6 +67,13 @@ describe Rapidash::HTTPClient do
       subject.request(:get, "foo")
     end
 
+    it "should store response" do
+      response = double(:body => "response")
+      allow(subject.connection).to receive(:run_request).with(:get, "http://example.com/foo", nil, nil).and_return(response)
+      subject.request(:get, "foo")
+      expect(subject.response).to eq(response)
+    end
+
     describe "default options" do
       let!(:subject) { HTTPTester.new(request_default_options: { header: { user_agent: 'New app v1.0'} } ) }
 
