@@ -4,7 +4,7 @@ require 'faraday_middleware/multi_json'
 
 module Rapidash
   module HTTPClient
-    attr_accessor :login, :password, :request_default_options
+    attr_accessor :login, :password, :request_default_options, :response
     attr_writer :connection
 
     # Provide login and password fields for basic HTTP authentication
@@ -32,9 +32,9 @@ module Rapidash
     def request(verb, url, options = {})
       options.merge!(self.request_default_options) if self.request_default_options
       url = connection.build_url(normalize_url(url), options[:params]).to_s
-      response = connection.run_request(verb, url, options[:body], options[:header])
+      self.response = connection.run_request(verb, url, options[:body], options[:header])
 
-      response.body
+      self.response.body
     end
   end
 end
